@@ -1,17 +1,28 @@
 package com.javaeeee;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
+import java.io.IOException;
+
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.common.xcontent.XContentType;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaeeee.utils.JsonUtil;
+
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-
-import java.io.File;
-import java.io.IOException;
+import resources.UserResource;
+import services.UserService;
 
 public class HelloDropwizardApplication extends Application<HelloDropwizardConfiguration> {
+
+    public static final String USER_INDEX_NAME = "users";
 
     public static void main(final String[] args) throws Exception {
         new HelloDropwizardApplication().run(args);
@@ -29,37 +40,33 @@ public class HelloDropwizardApplication extends Application<HelloDropwizardConfi
 
     @Override
     public void run(final HelloDropwizardConfiguration configuration,
-                    final Environment environment) {
-        // TODO: implement application
+                    final Environment environment) throws IOException {
+       RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
+               RestClient.builder(new HttpHost(configuration.getElasticsearchConfig().getHost(),
+                       configuration.getElasticsearchConfig().getPort(),
+                       "http")));
 
+       createIndex(restHighLevelClient);
+        UserService userService = new UserService(restHighLevelClient);
 
+        // URL mapping
+        environment.jersey().register(new UserResource(userService));
     }
 
-    private JsonNode getJson(String fileName) {
-        JsonFactory jsonFactory = new JsonFactory();
-        File file = new File(getClass().getClassLoader().getResource(fileName).getFile());
+    private void createIndex(RestHighLevelClient client) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonUtil jsonUtil = new JsonUtil();
+        JsonNode indexJson = jsonUtil.getJson("user.mapping");
+        String indexString = objectMapper.writeValueAsString(indexJson);
+        CreateIndexRequest request = new CreateIndexRequest(USER_INDEX_NAME);
+        request.source(indexString, XContentType.JSON);
         try {
-            JsonParser jp = jsonFactory.createParser(file);
-            jp.setCodec(new ObjectMapper());
-            return jp.readValueAsTree();
-        } catch (IOException e) {
+            client.indices().create(request, RequestOptions.DEFAULT);
+        } catch (Exception e) {
+            //log.error("Error creating Index {}", INDEX_NAME, e);
             e.printStackTrace();
-            return null;
         }
-    }
-    public <CreateIndexRequest> void createIndex(String communityName, JsonNode settings) throws IOException {
-        for (String indexName : INDEX_NAMES) {
-            JsonNode indexJson = jsonUtil.getJson(indexName + MAPPING_SUFFIX);
-            String indexString = objectMapper.writeValueAsString(indexJson);
-            CreateIndexRequest request = new CreateIndexRequest(communityName.toLowerCase());
-            request.source(indexString, XContentType.JSON);
-            try {
-                client.indices().create(request, RequestOptions.DEFAULT);
-            } catch (IOException e) {
-                log.error("Error creating Index {}", indexName, e);
-                throw new IOException(e);
-            }
-        }
+
     }
 
 

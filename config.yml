@@ -1,0 +1,15 @@
+logging:
+  level: INFO
+  loggers:
+    com.khoros: DEBUG
+server:
+  applicationConnectors:
+    - type: http
+      port: 9090
+  adminConnectors:
+    - type: http
+      port: 9091
+
+elasticsearchConfiguration:
+  host: localhost
+  port: 9500
