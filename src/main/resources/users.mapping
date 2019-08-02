@@ -98,7 +98,7 @@
   },
   "mappings": {
     "properties": {
-      "user_id": {
+      "userId": {
         "type": "text"
       },
       "firstName": {

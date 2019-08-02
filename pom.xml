@@ -21,7 +21,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>1.3.13</dropwizard.version>
         <es.client.version>7.2.0</es.client.version>
-        <mainClass>com.javaeeee.HelloDropwizardApplication</mainClass>
+        <mainClass>com.indore.HelloDropwizardApplication</mainClass>
     </properties>
 
     <dependencies>
