@@ -1,4 +1,4 @@
-package com.javaeeee;
+package com.indore;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

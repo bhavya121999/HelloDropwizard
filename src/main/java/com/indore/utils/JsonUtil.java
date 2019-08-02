@@ -1,4 +1,4 @@
-package com.javaeeee.utils;
+package com.indore.utils;
 
 import java.io.File;
 import java.io.IOException;

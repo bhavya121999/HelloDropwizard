@@ -1,4 +1,4 @@
-package com.javaeeee;
+package com.indore;
 
 import java.io.IOException;
 
@@ -12,13 +12,13 @@ import org.elasticsearch.common.xcontent.XContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaeeee.utils.JsonUtil;
+import com.indore.resources.UserResource;
+import com.indore.services.UserService;
+import com.indore.utils.JsonUtil;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import resources.UserResource;
-import services.UserService;
 
 public class HelloDropwizardApplication extends Application<HelloDropwizardConfiguration> {
 
@@ -56,7 +56,7 @@ public class HelloDropwizardApplication extends Application<HelloDropwizardConfi
     private void createIndex(RestHighLevelClient client) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonUtil jsonUtil = new JsonUtil();
-        JsonNode indexJson = jsonUtil.getJson("user.mapping");
+        JsonNode indexJson = jsonUtil.getJson("users.mapping");
         String indexString = objectMapper.writeValueAsString(indexJson);
         CreateIndexRequest request = new CreateIndexRequest(USER_INDEX_NAME);
         request.source(indexString, XContentType.JSON);
