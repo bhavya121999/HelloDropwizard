@@ -1,6 +1,6 @@
 package com.indore.services;
 
-import static com.indore.HelloDropwizardApplication.USER_INDEX_NAME;
+import static com.indore.GalaxyApp.USER_INDEX_NAME;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.indore.api.UserSearchResult;
 
 /**
- * User service to deal with user's documents.
+ * User service to deal with user's documents in elasticsearch.
  *
  * @author Amit Khandelwal
  */
@@ -39,29 +39,54 @@ public class UserService {
 		this.client = client;
 	}
 
+	/**
+	 * Add user document to its index.
+	 * @param id id of user document. Cannot be {@code null}.
+	 * @param user user document is JSON format. Cannot be {@code null}.
+	 */
 	public void add(String id, JsonNode user) {
+		if (id == null || user == null) {
+			throw new IllegalArgumentException("arguments can't be null");
+		}
+
 		String userStr = user.toString();
 		IndexRequest indexRequest = new IndexRequest(USER_INDEX_NAME)
 				.id(id)
 				.source(userStr, XContentType.JSON);
-		client.indexAsync(indexRequest , RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+		client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
 			@Override
 			public void onResponse(IndexResponse indexResponse) {
 				//log.debug("Index Response for user id {} is {} ", id, indexResponse);
 			}
+
 			@Override
 			public void onFailure(Exception e) {
 				//log.error("Message document with id {} is failed to index and cause is {}", id, e);
 			}
-		} );
+		});
 	}
 
+	/**
+	 * get a user document by its id from elasticsearch.
+	 * @param id unique id of user document. Cannot be {@code null}.
+	 * @return user document.
+	 * @throws IOException
+	 */
 	public String get(String id) throws IOException {
+		if (id.isEmpty()) {
+			throw new IllegalArgumentException("arguments can't be null");
+		}
 		GetRequest getRequest = new GetRequest(USER_INDEX_NAME, id);
 		GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
 		return getResponse.getSourceAsString();
 	}
 
+	/**
+	 * Search for a term in user index.
+	 * @param searchTerm search term which needs to be searched.
+	 * @return matching documents in user index.
+	 * @throws IOException
+	 */
 	public List<UserSearchResult> search(String searchTerm) throws IOException {
 		SearchRequest searchRequest = new SearchRequest("users");
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
