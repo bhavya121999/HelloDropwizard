@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -96,6 +98,26 @@ public class UserService {
 		}
 
 		return userSearchResults;
+
+	}
+	public void delete(String id) throws IOException{
+		DeleteRequest deleterequest = new DeleteRequest(USER_INDEX_NAME, id);
+		//ActionListener<DeleteResponse> listener = new ActionListener<DeleteResponse>();
+		client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>(){
+		@Override
+			public void onResponse(DeleteResponse deleteResponse) {
+
+			}
+
+			@Override
+			public void onFailure(Exception e) {
+
+			}
+		});
+
+
+
+
 
 	}
 }
