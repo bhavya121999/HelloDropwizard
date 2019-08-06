@@ -3,7 +3,6 @@ package com.indore.resources;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,12 +12,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import com.indore.api.SearchParameter;
 import com.indore.services.UserService;
 
@@ -42,7 +41,7 @@ public class UserResource {
 	@POST
 	@Path("{id}")
 	@Timed
-	public Response createUser(@PathParam("id") String id, @NotNull JsonNode user){
+	public Response createUser(@PathParam("id") @NotEmpty String id, @NotEmpty JsonNode user){
 		try {
 			log.debug("User id {} doc is {}", id, user);
 			userService.add(id,user);
@@ -58,7 +57,7 @@ public class UserResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response getUser(@PathParam("id") String id){
+	public Response getUser(@PathParam("id") @NotEmpty String id){
 		log.debug("Get request for message id {}", id);
 		try {
 			return Response.ok(userService.get(id)).build();
@@ -71,7 +70,7 @@ public class UserResource {
 	@POST
 	@Path("/search")
 	@Timed
-	public Response searchUsers(@NotNull SearchParameter searchParameter){
+	public Response searchUsers(@NotEmpty SearchParameter searchParameter){
 		log.debug("Search term {}", searchParameter.getSearchTerm());
 		try {
 			return Response.ok(userService.search(searchParameter.getSearchTerm())).build();

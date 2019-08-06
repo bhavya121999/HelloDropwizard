@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
 
-public class HelloDropwizardConfiguration extends Configuration {
+public class GalaxyConfiguration extends Configuration {
     private ElasticsearchConfig elasticsearchConfig;
 
     @JsonProperty("elasticsearchConfiguration")
