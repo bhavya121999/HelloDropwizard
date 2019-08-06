@@ -1,6 +1,6 @@
 package com.indore;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * <File Description>.
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author Amit Khandelwal
  */
 public class ElasticsearchConfig {
-	@NotNull
+	@NotEmpty
 	String host;
 
 	int port;
