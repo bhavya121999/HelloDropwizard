@@ -47,6 +47,10 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     @Override
     public void run(final GalaxyConfiguration configuration,
                     final Environment environment) throws IOException {
+        // Reference links for CORS related changes
+        // http://jitterted.co.technology/tidbits/2014/04/04/handling-cors-in-dropwizard-and-jetty/
+        // https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
+
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS",CrossOriginFilter.class);
                 //configuring CORS parameter
                 //specifies which origin are allowed to access your resource
