@@ -12,4 +12,4 @@ server:
 
 elasticsearchConfiguration:
   host: localhost
-  port: 9500
+  port: 9200

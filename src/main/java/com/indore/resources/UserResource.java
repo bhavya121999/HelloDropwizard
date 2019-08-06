@@ -41,7 +41,7 @@ public class UserResource {
 	@POST
 	@Path("{id}")
 	@Timed
-	public Response createUser(@PathParam("id") @NotEmpty String id, @NotEmpty JsonNode user){
+	public Response createUser(@PathParam("id") @NotEmpty String id, JsonNode user){
 		try {
 			log.debug("User id {} doc is {}", id, user);
 			userService.add(id,user);
