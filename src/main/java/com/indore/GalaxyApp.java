@@ -1,8 +1,11 @@
 package com.indore;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.EnumSet;
 
 import org.apache.http.HttpHost;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -19,6 +22,9 @@ import com.indore.utils.JsonUtil;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 
 public class GalaxyApp extends Application<GalaxyConfiguration> {
 
@@ -41,6 +47,17 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     @Override
     public void run(final GalaxyConfiguration configuration,
                     final Environment environment) throws IOException {
+        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS",CrossOriginFilter.class);
+                //configuring CORS parameter
+                //specifies which origin are allowed to access your resource
+               cors .setInitParameter("allowedOrigins", "*");
+               //specifies list of header that are allowed from client to server
+                cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+                cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE");
+                //Add URL mapping => set URL mapping of resources here we are setting all resources to be cross origin capable
+                cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class),true,"/*");
+
+
        RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
                RestClient.builder(new HttpHost(configuration.getElasticsearchConfig().getHost(),
                        configuration.getElasticsearchConfig().getPort(),
