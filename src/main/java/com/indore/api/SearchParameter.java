@@ -3,7 +3,7 @@ package com.indore.api;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * <File Description>.
+ * Parameters for user search.
  *
  * @author Amit Khandelwal
  */
