@@ -107,21 +107,16 @@
       "lastName": {
         "type": "text"
       },
-      "status": {
-        "type": "boolean"
+      "emailId": {
+        "type": "keyword"
+      },
+      "mobileNumber": {
+        "type": "long"
       },
       "password": {
         "type": "keyword"
-      },
-      "address": {
-        "type": "text"
-      },
-      "landmark": {
-        "type": "text"
-      },
-      "pincode": {
-        "type": "long"
       }
+
     }
   }
 }
