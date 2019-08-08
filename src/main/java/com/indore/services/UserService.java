@@ -129,14 +129,15 @@ public class UserService {
 		DeleteRequest deleterequest = new DeleteRequest(USER_INDEX_NAME, id);
 		//ActionListener<DeleteResponse> listener = new ActionListener<DeleteResponse>();
 		client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>(){
-		@Override
+			@Override
 			public void onResponse(DeleteResponse deleteResponse) {
+				//log.debug("Delete Response for user id {} is {} ", id, deleteResponse);
 
 			}
 
 			@Override
 			public void onFailure(Exception e) {
-
+				//log.error("Message document with id {} is failed to delete and cause is {}", id, e);
 			}
 		});
 

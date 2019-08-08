@@ -27,7 +27,7 @@ import com.indore.api.SearchParameter;
 import com.indore.services.UserService;
 
 /**
- * <User resource to create an entity for indexing the document, search request, getting doc by id. >.
+ * User resource to create an entity for indexing the document, search request, getting doc by id. .
  *
  * @author Amit Khandelwal
  */
@@ -75,7 +75,7 @@ public class UserResource {
 
 	@POST
 	@Path("/search")
-  @Timed
+	@Timed
 	public Response searchUsers(@NotEmpty SearchParameter searchParameter){
 		log.debug("Search term {}", searchParameter.getSearchTerm());
 		try {
