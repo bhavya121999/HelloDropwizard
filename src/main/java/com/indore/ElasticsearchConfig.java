@@ -8,24 +8,24 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author Amit Khandelwal
  */
 public class ElasticsearchConfig {
-	@NotEmpty
-	String host;
+    @NotEmpty
+    String host;
 
-	int port;
+    int port;
 
-	public String getHost() {
-		return host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 }

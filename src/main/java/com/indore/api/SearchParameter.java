@@ -9,21 +9,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public  class SearchParameter {
-	private  String searchTerm;
+public class SearchParameter {
+    private String searchTerm;
 
-	public SearchParameter() {
-	}
+    public SearchParameter() {
+    }
 
-	public SearchParameter(String searchTerm) {
-		this.searchTerm = searchTerm;
-	}
+    public SearchParameter(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
 
-	public String getSearchTerm() {
-		return searchTerm;
-	}
+    public String getSearchTerm() {
+        return searchTerm;
+    }
 
-	public void setSearchTerm(String searchTerm) {
-		this.searchTerm = searchTerm;
-	}
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
 }
