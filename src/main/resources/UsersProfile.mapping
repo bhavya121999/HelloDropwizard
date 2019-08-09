@@ -101,20 +101,71 @@
       "userId": {
         "type": "text"
       },
-      "firstName": {
+      "address": {
         "type": "text"
       },
-      "lastName": {
+      "currentCity": {
         "type": "text"
       },
-      "emailId": {
-        "type": "keyword"
+      "homeTown": {
+        "type": "text"
       },
-      "mobileNumber": {
+      "landmark": {
+        "type": "text"
+      },
+      "pincode": {
         "type": "long"
       },
-      "password": {
+      "education": {
+        "type": "text"
+      },
+      "highSchool": {
+        "type": "text"
+      },
+      "college": {
+        "type": "text"
+      },
+      "socialLink": {
         "type": "keyword"
+      },
+      "language": {
+        "type": "text"
+      },
+      "aboutYou": {
+        "type": "text"
+      },
+      "otherNames": {
+        "type": "text"
+      },
+      "hobbies": {
+        "type": "text"
+      },
+      "professionalSkills": {
+        "type": "text"
+      },
+      "musicArtist": {
+        "type": "text"
+      },
+      "bookAuthor": {
+        "type": "text"
+      },
+      "programmes": {
+        "type": "text"
+      },
+      "sportsTeam": {
+        "type": "text"
+      },
+      "sportsPeople": {
+        "type": "text"
+      },
+      "favouriteQuotes": {
+        "type": "text"
+      },
+      "lifeEvents": {
+        "type": "text"
+      },
+      "relationship": {
+        "type": "text"
       }
     }
   }
