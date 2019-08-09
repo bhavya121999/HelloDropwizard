@@ -99,7 +99,7 @@
   "mappings": {
     "properties": {
       "userId": {
-        "type": "text"
+        "type": "keyword"
       },
       "address": {
         "type": "text"
@@ -114,7 +114,7 @@
         "type": "text"
       },
       "pincode": {
-        "type": "long"
+        "type": "keyword"
       },
       "education": {
         "type": "text"
@@ -162,9 +162,6 @@
         "type": "text"
       },
       "lifeEvents": {
-        "type": "text"
-      },
-      "relationship": {
         "type": "text"
       }
     }

@@ -76,7 +76,7 @@ public class UserResource {
     @POST
     @Path("/search")
     @Timed
-    public Response searchUsers(@NotEmpty SearchParameter searchParameter) {
+    public Response searchUsers( SearchParameter searchParameter) {
         log.debug("Search term {}", searchParameter.getSearchTerm());
         try {
             return Response.ok(userService.search(searchParameter.getSearchTerm())).build();
