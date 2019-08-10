@@ -97,7 +97,7 @@ public class UserService {
         SearchRequest searchRequest = new SearchRequest("users");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(searchTerm, "firstName", "lastName",
-                "address", "landmark", "userId");
+                "password", "emailId", "userId","mobileNumber");
         multiMatchQueryBuilder.operator(Operator.AND);
         searchSourceBuilder.query(multiMatchQueryBuilder);
         searchRequest.source(searchSourceBuilder);
@@ -118,11 +118,19 @@ public class UserService {
             String index = hit.getIndex();
             String id = hit.getId();
             float score = hit.getScore();
+
+
             //String sourceAsString = hit.getSourceAsString();
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             String firstName = (String) sourceAsMap.get("firstName");
             String lastName = (String) sourceAsMap.get("lastName");
-            UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, score);
+			String emailId = (String) sourceAsMap.get("emailId");
+
+			String password = (String) sourceAsMap.get("password");
+			String userId = (String) sourceAsMap.get("userId");
+
+
+			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName,emailId,password,userId,score);
             userSearchResults.add(userSearchResult);
         }
 
@@ -148,4 +156,5 @@ public class UserService {
 
 
     }
+   
 }

@@ -23,6 +23,9 @@
             ],
             "tokenizer": "keyword"
           },
+          "my_analyzer": {
+            "tokenizer": "my_tokenizer"
+          },
           "default": {
             "type": "english",
             "stopwords": "_none_"
@@ -67,6 +70,12 @@
           }
         },
         "tokenizer": {
+          "my_tokenizer": {
+            "type": "uax_url_email",
+            "max_token_length": 5
+          }
+        },
+        "tokenizer": {
           "edgeNGramTokenizer": {
             "token_chars": [
               "letter",
@@ -99,7 +108,7 @@
   "mappings": {
     "properties": {
       "userId": {
-        "type": "text"
+        "type": "keyword"
       },
       "firstName": {
         "type": "text"
@@ -107,8 +116,11 @@
       "lastName": {
         "type": "text"
       },
-      "emailId": {
-        "type": "keyword"
+      "emailId":
+      {
+        "analyzer": "my_analyzer",
+        "type": "text"
+
       },
       "mobileNumber": {
         "type": "long"
