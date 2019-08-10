@@ -72,7 +72,7 @@
         "tokenizer": {
           "my_tokenizer": {
             "type": "uax_url_email",
-            "max_token_length": 3
+            "max_token_length": 5
           }
         },
         "tokenizer": {
