@@ -7,14 +7,6 @@
             "type": "lowercase"
           }
         },
-        "char_filter": {
-          "replace_dots": {
-            "type": "mapping",
-            "mappings": [
-              ".=>\\u0020"
-            ]
-          }
-        },
         "analyzer": {
           "lcKeyword": {
             "type": "custom",
@@ -22,44 +14,6 @@
               "lowercaseFilter"
             ],
             "tokenizer": "keyword"
-          },
-          "my_analyzer": {
-            "tokenizer": "my_tokenizer"
-          },
-          "default": {
-            "type": "english",
-            "stopwords": "_none_"
-          },
-          "customstandard": {
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "char_filter": [
-              "replace_dots"
-            ],
-            "type": "custom",
-            "tokenizer": "standard"
-          },
-          "prefix": {
-            "type": "custom",
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "tokenizer": "edgeNGramTokenizer"
-          },
-          "whitespaceLowercase": {
-            "type": "custom",
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "tokenizer": "whitespace"
-          },
-          "lcSubstring": {
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "type": "custom",
-            "tokenizer": "loginNGram"
           },
           "email": {
             "filter": [
@@ -70,30 +24,6 @@
           }
         },
         "tokenizer": {
-          "my_tokenizer": {
-            "type": "uax_url_email",
-            "max_token_length": 5
-          }
-        },
-        "tokenizer": {
-          "edgeNGramTokenizer": {
-            "token_chars": [
-              "letter",
-              "digit"
-            ],
-            "min_gram": "1",
-            "type": "edgeNGram",
-            "max_gram": "40"
-          },
-          "standard": {
-            "type": "standard",
-            "max_token_length": "255"
-          },
-          "loginNGram": {
-            "type": "nGram",
-            "min_gram": "3",
-            "max_gram": "50"
-          },
           "emailTokenizer": {
             "type": "pattern",
             "pattern": "\\W+"
@@ -108,7 +38,8 @@
   "mappings": {
     "properties": {
       "userId": {
-        "type": "keyword"
+        "analyzer": "lcKeyword",
+        "type": "text"
       },
       "firstName": {
         "type": "text"
@@ -118,7 +49,7 @@
       },
       "emailId":
       {
-        "analyzer": "my_analyzer",
+        "analyzer": "email",
         "type": "text"
 
       },

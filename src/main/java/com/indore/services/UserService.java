@@ -171,8 +171,8 @@ public class UserService {
 		return userSearchResults;
 	}
 
-	public void delete(String id) throws IOException {
-		final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, id);
+	public void delete(String userId) throws IOException {
+		final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, userId);
 		client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>() {
 			@Override
 			public void onResponse(DeleteResponse deleteResponse) {

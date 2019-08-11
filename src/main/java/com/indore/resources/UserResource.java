@@ -1,8 +1,6 @@
 package com.indore.resources;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -82,17 +80,16 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    public Response deleteUser(@PathParam("id") String id) {
-        log.debug("Delete request for message id {}", id);
+    public Response deleteUser(@PathParam("userId") String userId) {
+        log.debug("Delete request for message id {}", userId);
         try {
-            userService.delete(id);
-            URI uri = new URI(id);
-            return Response.created(uri).build();
-        } catch (IOException | URISyntaxException e) {
-            log.error("Error getting message doc {} and error is {}", id, e);
+            userService.delete(userId);
+            return Response.ok().build();
+        } catch (IOException e) {
+            log.error("Error deleting user document {} and error is {}", userId, e);
             return Response.serverError().build();
         }
     }
