@@ -115,15 +115,12 @@ public class UserService {
 		}
 
 	}
-/**isMobile = false;
-	email==null
-	isMobile=true
-	isAuthenticare(mobileNumber, isMobile, password)*/
 
-    private boolean isAuthenticate(String email,Long mobile,String password) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+
+	private boolean isAuthenticate(String email,Long mobile,String password) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.minimumShouldMatch(2);
+		boolQueryBuilder.minimumShouldMatch(2);
 		if(email != null) {
 			MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
 			boolQueryBuilder.should(emailMatchQueryBuilder);
