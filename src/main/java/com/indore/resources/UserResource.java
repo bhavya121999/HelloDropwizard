@@ -1,14 +1,9 @@
 package com.indore.resources;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,15 +39,13 @@ public class UserResource {
 
 
     @POST
-    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
-    public Response createUser(@PathParam("id") @NotEmpty String id, JsonNode user) {
+    public Response createUser(JsonNode user) {
         try {
-            log.debug("User id {} doc is {}", id, user);
-            userService.add(id, user);
-            URI uri = new URI(id);
-            return Response.created(uri).build();
+            log.debug("User doc is {}", user);
+            userService.add(user);
+            return Response.ok().build();
         } catch (Exception e) {
             log.error("Error indexing doc {} and error is", user, e);
             return Response.serverError().build();
@@ -64,11 +57,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
     public Response getUser(@PathParam("id") @NotEmpty String id) {
-        log.debug("Get request for message id {}", id);
+        log.debug("Get request for user id {}", id);
         try {
             return Response.ok(userService.get(id)).build();
         } catch (IOException e) {
-            log.error("Error getting message doc {} and error is {}", id, e);
+            log.error("Error getting user doc {} and error is {}", id, e);
             return Response.serverError().build();
         }
     }
@@ -87,17 +80,16 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    public Response deleteUser(@PathParam("id") String id) {
-        log.debug("Delete request for message id {}", id);
+    public Response deleteUser(@PathParam("userId") String userId) {
+        log.debug("Delete request for message id {}", userId);
         try {
-            userService.delete(id);
-            URI uri = new URI(id);
-            return Response.created(uri).build();
-        } catch (IOException | URISyntaxException e) {
-            log.error("Error getting message doc {} and error is {}", id, e);
+            userService.delete(userId);
+            return Response.ok().build();
+        } catch (IOException e) {
+            log.error("Error deleting user document {} and error is {}", userId, e);
             return Response.serverError().build();
         }
     }

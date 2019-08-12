@@ -1,6 +1,6 @@
 package com.indore.services;
 
-import static com.indore.GalaxyApp.USER_INDEX_NAME;
+import static com.indore.GalaxyApp.USERS_INDEX_NAME;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,12 +20,16 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.indore.api.UserSearchResult;
@@ -36,125 +40,150 @@ import com.indore.api.UserSearchResult;
  * @author Amit Khandelwal
  */
 public class UserService {
-    private final RestHighLevelClient client;
+	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(RestHighLevelClient client) {
-        this.client = client;
-    }
+	private final RestHighLevelClient client;
 
-    /**
-     * Add user document to its index.
-     *
-     * @param id   id of user document. Cannot be {@code null}.
-     * @param user user document is JSON format. Cannot be {@code null}.
-     */
-    public void add(String id, JsonNode user) {
-        if (id == null || user == null) {
-            throw new IllegalArgumentException("arguments can't be null");
-        }
+	public UserService(RestHighLevelClient client) {
+		this.client = client;
+	}
 
-        String userStr = user.toString();
-        IndexRequest indexRequest = new IndexRequest(USER_INDEX_NAME)
-                .id(id)
-                .source(userStr, XContentType.JSON);
-        client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
-            @Override
-            public void onResponse(IndexResponse indexResponse) {
-                //log.debug("Index Response for user id {} is {} ", id, indexResponse);
-            }
+	/**
+	 * Add user document to its index.
+	 *
+	 * @param user user document is JSON format. Cannot be {@code null}.
+	 */
+	public void add(JsonNode user) throws IOException {
+		String email = user.get("emailId").asText();
+		String userId = user.get("userId").asText();
+		long mobile = user.get("mobileNumber").asLong();
 
-            @Override
-            public void onFailure(Exception e) {
-                //log.error("Message document with id {} is failed to index and cause is {}", id, e);
-            }
-        });
-    }
+		if(isUserExist(email, userId, mobile)){
+			return;
+		}
 
-    /**
-     * get a user document by its id from elasticsearch.
-     *
-     * @param id unique id of user document. Cannot be {@code null}.
-     * @return user document.
-     * @throws IOException
-     */
-    public String get(String id) throws IOException {
-        if (id.isEmpty()) {
-            throw new IllegalArgumentException("arguments can't be null");
-        }
-        GetRequest getRequest = new GetRequest(USER_INDEX_NAME, id);
-        GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
-        return getResponse.getSourceAsString();
-    }
+		String userStr = user.toString();
+		final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
+				.id(userId)
+				.source(userStr, XContentType.JSON);
+		client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+			@Override
+			public void onResponse(IndexResponse indexResponse) {
+				log.debug("Index Response for user id {} is {} ", indexRequest.id(), indexResponse);
+			}
 
-    /**
-     * Search for a term in user index.
-     *
-     * @param searchTerm search term which needs to be searched.
-     * @return matching documents in user index.
-     * @throws IOException
-     */
-    public List<UserSearchResult> search(String searchTerm) throws IOException {
-        SearchRequest searchRequest = new SearchRequest("users");
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(searchTerm, "firstName", "lastName",
-                "password", "emailId", "userId","mobileNumber");
-        multiMatchQueryBuilder.operator(Operator.AND);
-        searchSourceBuilder.query(multiMatchQueryBuilder);
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        // TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
-        RestStatus status = searchResponse.status();
-        TimeValue took = searchResponse.getTook();
-        Boolean terminatedEarly = searchResponse.isTerminatedEarly();
-        boolean timedOut = searchResponse.isTimedOut();
+			@Override
+			public void onFailure(Exception e) {
+				log.error("User document with id {} is failed to index and cause is {}", indexRequest.id(), e);
+			}
+		});
+	}
 
-        // Start fetching the documents matching the search results.
-        //https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html#java-rest-high-search-response-search-hits
-        SearchHits hits = searchResponse.getHits();
-        SearchHit[] searchHits = hits.getHits();
-        List<UserSearchResult> userSearchResults = new ArrayList<>();
-        for (SearchHit hit : searchHits) {
-            // do something with the SearchHit
-            String index = hit.getIndex();
-            String id = hit.getId();
-            float score = hit.getScore();
+	private boolean isUserExist(String email, String userId, long mobile) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+		boolQueryBuilder.minimumShouldMatch(1);
+		MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+		MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
+		MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+		boolQueryBuilder.should(emailMatchQueryBuilder);
+		boolQueryBuilder.should(userIdMatchQueryBuilder);
+		boolQueryBuilder.should(mobileMatchQueryBuilder);
 
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(boolQueryBuilder);
+		log.info("Search json {} for user exist", searchSourceBuilder.toString());
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+		List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
+		return (userSearchResults != null && userSearchResults.size() > 0);
 
-            //String sourceAsString = hit.getSourceAsString();
-            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-            String firstName = (String) sourceAsMap.get("firstName");
-            String lastName = (String) sourceAsMap.get("lastName");
+	}
+
+	/**
+	 * get a user document by its id from elasticsearch.
+	 *
+	 * @param id unique id of user document. Cannot be {@code null}.
+	 * @return user document.
+	 * @throws IOException
+	 */
+	public String get(String id) throws IOException {
+		if (id.isEmpty()) {
+			throw new IllegalArgumentException("arguments can't be null");
+		}
+		GetRequest getRequest = new GetRequest(USERS_INDEX_NAME, id);
+		GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+		return getResponse.getSourceAsString();
+	}
+
+	/**
+	 * Search for a term in user index.
+	 *
+	 * @param searchTerm search term which needs to be searched.
+	 * @return matching documents in user index.
+	 * @throws IOException
+	 */
+	public List<UserSearchResult> search(String searchTerm) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(searchTerm, "firstName", "lastName",
+				"password", "emailId", "userId", "mobileNumber");
+		multiMatchQueryBuilder.operator(Operator.AND);
+		searchSourceBuilder.query(multiMatchQueryBuilder);
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+		return getUserSearchResults(searchResponse);
+
+	}
+
+	private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
+		// TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
+		RestStatus status = searchResponse.status();
+		TimeValue took = searchResponse.getTook();
+		Boolean terminatedEarly = searchResponse.isTerminatedEarly();
+		boolean timedOut = searchResponse.isTimedOut();
+
+		// Start fetching the documents matching the search results.
+		//https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search
+		// .html#java-rest-high-search-response-search-hits
+		SearchHits hits = searchResponse.getHits();
+		SearchHit[] searchHits = hits.getHits();
+		List<UserSearchResult> userSearchResults = new ArrayList<>();
+		for (SearchHit hit : searchHits) {
+			// do something with the SearchHit
+			String index = hit.getIndex();
+			String id = hit.getId();
+			float score = hit.getScore();
+
+			//String sourceAsString = hit.getSourceAsString();
+			Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+			String firstName = (String) sourceAsMap.get("firstName");
+			String lastName = (String) sourceAsMap.get("lastName");
 			String emailId = (String) sourceAsMap.get("emailId");
-
 			String password = (String) sourceAsMap.get("password");
 			String userId = (String) sourceAsMap.get("userId");
 
+			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, password, userId,
+					score);
+			userSearchResults.add(userSearchResult);
+		}
 
-			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName,emailId,password,userId,score);
-            userSearchResults.add(userSearchResult);
-        }
+		return userSearchResults;
+	}
 
-        return userSearchResults;
+	public void delete(String userId) throws IOException {
+		final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, userId);
+		client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>() {
+			@Override
+			public void onResponse(DeleteResponse deleteResponse) {
+				log.debug("Delete Response for user id {} is {} ", deleterequest.id(), deleteResponse);
+			}
 
-    }
+			@Override
+			public void onFailure(Exception e) {
+				log.error("User document with id {} is failed to delete and cause is {}", deleterequest.id(), e);
+			}
+		});
+	}
 
-    public void delete(String id) throws IOException {
-        DeleteRequest deleterequest = new DeleteRequest(USER_INDEX_NAME, id);
-        //ActionListener<DeleteResponse> listener = new ActionListener<DeleteResponse>();
-        client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>() {
-            @Override
-            public void onResponse(DeleteResponse deleteResponse) {
-                //log.debug("Delete Response for user id {} is {} ", id, deleteResponse);
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                //log.error("Message document with id {} is failed to delete and cause is {}", id, e);
-            }
-        });
-
-
-    }
-   
 }
