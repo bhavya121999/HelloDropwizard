@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 
+import com.indore.resources.UsersProfileResource;
+import com.indore.services.UsersProfileService;
 import org.apache.http.HttpHost;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.elasticsearch.client.RequestOptions;
@@ -61,9 +63,11 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
 
         createIndex(restHighLevelClient);
         UserService userService = new UserService(restHighLevelClient);
+        UsersProfileService userProfileService = new UsersProfileService(restHighLevelClient);
 
         // URL mapping
         environment.jersey().register(new UserResource(userService));
+        environment.jersey().register(new UsersProfileResource(userProfileService));
     }
 
 
