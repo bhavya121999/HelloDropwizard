@@ -7,6 +7,14 @@
             "type": "lowercase"
           }
         },
+        "char_filter": {
+          "replace_dots": {
+            "type": "mapping",
+            "mappings": [
+              ".=>\\u0020"
+            ]
+          }
+        },
         "analyzer": {
           "lcKeyword": {
             "type": "custom",
@@ -14,9 +22,73 @@
               "lowercaseFilter"
             ],
             "tokenizer": "keyword"
+          },
+          "default": {
+            "type": "english",
+            "stopwords": "_none_"
+          },
+          "customstandard": {
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "char_filter": [
+              "replace_dots"
+            ],
+            "type": "custom",
+            "tokenizer": "standard"
+          },
+          "prefix": {
+            "type": "custom",
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "tokenizer": "edgeNGramTokenizer"
+          },
+          "whitespaceLowercase": {
+            "type": "custom",
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "tokenizer": "whitespace"
+          },
+          "lcSubstring": {
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "type": "custom",
+            "tokenizer": "loginNGram"
+          },
+          "email": {
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "type": "custom",
+            "tokenizer": "emailTokenizer"
           }
         },
         "tokenizer": {
+          "edgeNGramTokenizer": {
+            "token_chars": [
+              "letter",
+              "digit"
+            ],
+            "min_gram": "1",
+            "type": "edgeNGram",
+            "max_gram": "40"
+          },
+          "standard": {
+            "type": "standard",
+            "max_token_length": "255"
+          },
+          "loginNGram": {
+            "type": "nGram",
+            "min_gram": "3",
+            "max_gram": "50"
+          },
+          "emailTokenizer": {
+            "type": "pattern",
+            "pattern": "\\W+"
+          }
         }
       },
       "number_of_shards": "1",
@@ -27,8 +99,7 @@
   "mappings": {
     "properties": {
       "userId": {
-        "analyzer": "lcKeyword",
-        "type": "text"
+        "type": "keyword"
       },
       "address": {
         "type": "text"
@@ -48,13 +119,13 @@
       "education": {
         "type": "text"
       },
-      "schoolName": {
+      "highSchool": {
         "type": "text"
       },
-      "collegeName": {
+      "college": {
         "type": "text"
       },
-      "socialProfileLink": {
+      "socialLink": {
         "type": "keyword"
       },
       "language": {
@@ -75,10 +146,10 @@
       "musicArtist": {
         "type": "text"
       },
-      "FavoriteAuthor": {
+      "bookAuthor": {
         "type": "text"
       },
-      "tvProgrammes": {
+      "programmes": {
         "type": "text"
       },
       "sportsTeam": {

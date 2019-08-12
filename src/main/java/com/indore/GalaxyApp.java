@@ -91,12 +91,7 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
                 String indexString = objectMapper.writeValueAsString(indexJson);
                 CreateIndexRequest request = new CreateIndexRequest(indexName);
                 request.source(indexString, XContentType.JSON);
-                try {
-                    client.indices().create(request, RequestOptions.DEFAULT);
-                } catch (Exception e) {
-                    //log.error("Error creating Index {}", INDEX_NAME, e);
-                    e.printStackTrace();
-                }
+                client.indices().create(request, RequestOptions.DEFAULT);
             }
         }
     }
