@@ -109,6 +109,18 @@ public class UserResource {
         }
 
     }
+
+   /** public Response getAllUser(){
+        log.debug("Get record of all users");
+        try {
+            return Response.ok(userService.getAll()).build();
+        } catch (IOException e) {
+            log.error("Error getting user doc and error is {}", e);
+            return Response.serverError().build();
+        }
+
+    }*/
+
 }
 
 

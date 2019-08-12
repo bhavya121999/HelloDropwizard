@@ -228,47 +228,21 @@ public class UserService {
 			public void onResponse(DeleteResponse deleteResponse) {
 				log.debug("Delete Response for user id {} is {} ", deleterequest.id(), deleteResponse);
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			@Override
 			public void onFailure(Exception e) {
 				log.error("User document with id {} is failed to delete and cause is {}", deleterequest.id(), e);
 			}
 		});
 	}
+
+	/**public String getAll() throws IOException {
+		if (USERS_INDEX_NAME.isEmpty()) {
+			throw new IllegalArgumentException("arguments can't be null");
+		}
+		GetRequest getRequest = new GetRequest(USERS_INDEX_NAME);
+		GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+
+		return getResponse.getSourceAsString();
+	}*/
 
 }
