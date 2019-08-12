@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jetty.security.UserAuthentication;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -98,7 +99,56 @@ public class UserService {
 		List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
 		return (userSearchResults != null && userSearchResults.size() > 0);
 
+
 	}
+
+	public boolean authUser(String emailId,
+						 Long mobileNumber,String password) throws IOException {
+		/**String email = USERS_INDEX_NAME.get("emailId").asText();
+
+		long mobile = USERS_INDEX_NAME.get("mobileNumber").asLong();*/
+
+		if (isAuthenticate(emailId,mobileNumber,password)) {
+			return true;
+		} else{
+			return false;
+		}
+
+	}
+/**isMobile = false;
+	email==null
+	isMobile=true
+	isAuthenticare(mobileNumber, isMobile, password)*/
+
+    private boolean isAuthenticate(String email,Long mobile,String password) throws IOException {
+        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.minimumShouldMatch(2);
+		if(email != null) {
+			MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+			boolQueryBuilder.should(emailMatchQueryBuilder);
+		}
+		if(mobile != null) {
+			MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+			boolQueryBuilder.should(mobileMatchQueryBuilder);
+		}
+
+		MatchQueryBuilder passwordMatchQueryBuilder = new MatchQueryBuilder("password", password);
+        boolQueryBuilder.should(passwordMatchQueryBuilder);
+
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(boolQueryBuilder);
+        log.info("Search json {} for user exist", searchSourceBuilder.toString());
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
+        return (userSearchResults != null && userSearchResults.size() > 0);
+
+
+    }
+
+
 
 	/**
 	 * get a user document by its id from elasticsearch.
@@ -163,6 +213,9 @@ public class UserService {
 			String password = (String) sourceAsMap.get("password");
 			String userId = (String) sourceAsMap.get("userId");
 
+
+
+
 			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, password, userId,
 					score);
 			userSearchResults.add(userSearchResult);
@@ -178,6 +231,41 @@ public class UserService {
 			public void onResponse(DeleteResponse deleteResponse) {
 				log.debug("Delete Response for user id {} is {} ", deleterequest.id(), deleteResponse);
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			@Override
 			public void onFailure(Exception e) {

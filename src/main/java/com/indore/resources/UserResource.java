@@ -2,13 +2,7 @@ package com.indore.resources;
 
 import java.io.IOException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -69,7 +63,7 @@ public class UserResource {
     @POST
     @Path("/search")
     @Timed
-    public Response searchUsers( SearchParameter searchParameter) {
+    public Response searchUsers(SearchParameter searchParameter) {
         log.debug("Search term {}", searchParameter.getSearchTerm());
         try {
             return Response.ok(userService.search(searchParameter.getSearchTerm())).build();
@@ -94,5 +88,33 @@ public class UserResource {
         }
     }
 
+    @GET
+    @Path("/auth/password/{password}")
+    public Response authUser(@PathParam("password") String password, @QueryParam("emailId") String emailId,
+                             @QueryParam("mobileNumber") Long mobileNumber) throws IOException {
+        String testeMAIL = emailId;
+        Long mbl = mobileNumber;
+        String pass = password;
+        log.debug("Authenticate request for user");
+        try {
+            if(userService.authUser(emailId, mobileNumber, password)) {
+                return Response.ok().build();
+            } else{
+                return Response.noContent().build(); //need to correct this later so as to show this user is not present
+            }
 
+        } catch (IOException e) {
+            log.error("User does not exist and error is {}", e);
+            return Response.serverError().build();
+        }
+
+    }
 }
+
+
+
+
+
+
+
+
