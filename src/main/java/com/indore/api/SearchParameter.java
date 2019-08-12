@@ -15,13 +15,24 @@ public class SearchParameter {
     public SearchParameter() {
     }
 
+    /**
+     * @param searchTerm search term which needs to be searched.
+     */
     public SearchParameter(String searchTerm) {
         this.searchTerm = searchTerm;
     }
 
+    /**
+     * @return matching documents corresponding to searchTerm in user index.
+     */
+
     public String getSearchTerm() {
         return searchTerm;
     }
+
+    /**
+     * @param searchTerm search term which needs to be searched.
+     */
 
     public void setSearchTerm(String searchTerm) {
         this.searchTerm = searchTerm;

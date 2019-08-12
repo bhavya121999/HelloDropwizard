@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static com.indore.GalaxyApp.USERS_INDEX_NAME;
-import static com.indore.GalaxyApp.USERS_PROFILE_INDEX_NAME ;
+import static com.indore.GalaxyApp.USERS_PROFILE_INDEX_NAME;
 
 public class UsersProfileService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -35,7 +35,7 @@ public class UsersProfileService {
         String userId = userProfile.get("userId").asText();
         String address = userProfile.get("address").asText();
         String currentCity = userProfile.get("currentCity").asText();
-        String homeTown= userProfile.get("homeTown").asText();
+        String homeTown = userProfile.get("homeTown").asText();
         String landmark = userProfile.get("landmark").asText();
         String pincode = userProfile.get("pincode").asText();
         String education = userProfile.get("education").asText();
@@ -53,9 +53,9 @@ public class UsersProfileService {
         String sportsTeam = userProfile.get("sportsTeam").asText();
         String sportsPeople = userProfile.get("sportsPeople").asText();
         String favouriteQuotes = userProfile.get("favouriteQuotes").asText();
-        String lifeEvents= userProfile.get("lifeEvents").asText();
+        String lifeEvents = userProfile.get("lifeEvents").asText();
         String userStr = userProfile.toString();
-        final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME )
+        final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME)
                 .id(userId)
                 .source(userStr, XContentType.JSON);
         client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
@@ -71,6 +71,14 @@ public class UsersProfileService {
         });
 
     }
+
+    /**
+     * get a userProfile document by its id from elasticsearch.
+     *
+     * @param id unique id of user document. Cannot be {@code null}.
+     * @return profile of the user.
+     * @throws IOException
+     */
 
     public String get(String id) throws IOException {
         if (id.isEmpty()) {
