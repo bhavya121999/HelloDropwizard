@@ -1,15 +1,15 @@
 logging:
   level: INFO
   loggers:
-    com.khoros: DEBUG
+    com.indore: DEBUG
 server:
   applicationConnectors:
     - type: http
-      port: 9090
+      port: 9092
   adminConnectors:
     - type: http
       port: 9093
 
 elasticsearchConfiguration:
   host: localhost
-  port: 9200
+  port: 9500

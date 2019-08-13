@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jetty.security.UserAuthentication;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -43,25 +42,28 @@ import com.indore.api.UserSearchResult;
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final RestHighLevelClient client;
+	private final RestHighLevelClient client;
+	private final String EMAIL_ID = "emailId";
+	private final String USER_ID = "userId";
+	private final String MOBILE_NUMBER = "mobileNumber";
 
     public UserService(RestHighLevelClient client) {
         this.client = client;
     }
 
-    /**
-     * Add user document to its index.
-     *
-     * @param user user document is JSON format. Cannot be {@code null}.
-     */
-    public void add(JsonNode user) throws IOException {
-        String email = user.get("emailId").asText();
-        String userId = user.get("userId").asText();
-        long mobile = user.get("mobileNumber").asLong();
+	/**
+	 * Add user document to its index.
+	 *
+	 * @param user user document is JSON format. Cannot be {@code null}.
+	 */
+	public void add(JsonNode user) throws IOException {
+		String email = user.has(EMAIL_ID) ? user.get(EMAIL_ID).asText() : null;
+		String userId = user.has(USER_ID) ? user.get(USER_ID).asText() : null;
+		Long mobile = user.has(MOBILE_NUMBER) ? user.get(MOBILE_NUMBER).asLong() : null;
 
-        if (isUserExist(email, userId, mobile)) {
-            return;
-        }
+		if (isUserExist(email, userId, mobile)) {
+			return;
+		}
 
         String userStr = user.toString();
         final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
@@ -80,29 +82,19 @@ public class UserService {
         });
     }
 
-    /**
-     * isUserExist() is used to check whether the user is already logged in or not. Based on emailId/mobileNumber/userId
-     * The match query is of type boolean . It means that the text provided is analyzed and the analysis process
-     * constructs a boolean query from the provided text.
-     * A search source builder allowing to easily build search source.
-     *
-     * @param email  unique emailId of the user.
-     * @param userId unique userId of the user.
-     * @param mobile unique mobileNumber of the user.
-     * @return user search result.
-     * @throws IOException
-     */
+	private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
+		if(email == null | userId == null | mobile ==null)
+			throw new IllegalArgumentException("email or userid or mobile can't be null");
 
-    private boolean isUserExist(String email, String userId, long mobile) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.minimumShouldMatch(1);
-        MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
-        MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
-        MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
-        boolQueryBuilder.should(emailMatchQueryBuilder);
-        boolQueryBuilder.should(userIdMatchQueryBuilder);
-        boolQueryBuilder.should(mobileMatchQueryBuilder);
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+		boolQueryBuilder.minimumShouldMatch(1);
+		MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+		MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
+		MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+		boolQueryBuilder.should(emailMatchQueryBuilder);
+		boolQueryBuilder.should(userIdMatchQueryBuilder);
+		boolQueryBuilder.should(mobileMatchQueryBuilder);
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(boolQueryBuilder);
