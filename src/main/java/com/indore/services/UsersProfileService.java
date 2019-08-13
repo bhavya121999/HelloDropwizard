@@ -1,18 +1,33 @@
 package com.indore.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.action.DocWriteResponse;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.get.GetResult;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ScrollableHitSource;
+import org.elasticsearch.index.reindex.UpdateByQueryRequest;
+import org.elasticsearch.rest.RestStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.indore.GalaxyApp.USERS_INDEX_NAME;
 import static com.indore.GalaxyApp.USERS_PROFILE_INDEX_NAME;
@@ -88,8 +103,34 @@ public class UsersProfileService {
         GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
         return getResponse.getSourceAsString();
     }
+
+    /**
+     * Updates users profile
+     *
+     * @param user user document is JSON format. Cannot be {@code null}.
+     * @throws IOException
+     */
+
+    public void update(JsonNode user) throws IOException {
+        String userId = user.get("userId").asText();
+        String userStr = user.toString();
+        final UpdateRequest request = new UpdateRequest("usersprofile", "userId")
+                .id(userId);
+
+        request.doc(userStr, XContentType.JSON);
+        client.updateAsync(request, RequestOptions.DEFAULT, new ActionListener<UpdateResponse>() {
+
+            @Override
+            public void onResponse(UpdateResponse updateResponse) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+
+    }
 }
-
-
-
 

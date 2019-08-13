@@ -74,4 +74,26 @@ public class UsersProfileResource {
             return Response.serverError().build();
         }
     }
+
+    /**
+     * The Update API allows to update an existing document by passing a partial document.
+     *
+     * @param userProfile users profile document is in JSON format. Cannot be {@code null}.
+     * @return updates the existing document.
+     */
+
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed
+    public Response updateUser(JsonNode userProfile) {
+        try {
+            log.debug("User doc is {}", userProfile);
+            usersProfileService.update(userProfile);
+            return Response.ok().build();
+        } catch (Exception e) {
+            log.error("Error updating doc and error is {}", e);
+            return Response.serverError().build();
+        }
+    }
 }
