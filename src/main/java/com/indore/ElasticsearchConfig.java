@@ -3,7 +3,7 @@ package com.indore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * <File Description>.
+ * ElasticsearchConfig to define the host and port of the application.
  *
  * @author Amit Khandelwal
  */

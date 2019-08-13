@@ -2,13 +2,7 @@ package com.indore.resources;
 
 import java.io.IOException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,6 +31,13 @@ public class UserResource {
         this.userService = userService;
     }
 
+    /**
+     * The index API adds or updates a JSON document in a specific index, making it searchable.
+     *
+     * @param user user document is JSON format. Cannot be {@code null}.
+     * @return user document is indexed.
+     */
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,6 +53,12 @@ public class UserResource {
         }
     }
 
+    /**
+     * The get API allows to get a JSON document from the index based on its id.
+     *
+     * @param id unique id of user document. Cannot be {@code null}.
+     * @return user document.
+     */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -66,10 +73,17 @@ public class UserResource {
         }
     }
 
+    /**
+     * This API allows to search user document based on search term.
+     *
+     * @param searchParameter Parameters that can be included in the search term.
+     * @return user document corresponding to search term.
+     */
+
     @POST
     @Path("/search")
     @Timed
-    public Response searchUsers( SearchParameter searchParameter) {
+    public Response searchUsers(SearchParameter searchParameter) {
         log.debug("Search term {}", searchParameter.getSearchTerm());
         try {
             return Response.ok(userService.search(searchParameter.getSearchTerm())).build();
@@ -78,6 +92,13 @@ public class UserResource {
             return Response.serverError().build();
         }
     }
+
+    /**
+     * The delete API allows to delete a JSON document from a specific index based on its id.
+     *
+     * @param userId unique id of user document. Cannot be {@code null}.
+     * @return user document is deleted.
+     */
 
     @DELETE
     @Path("{userId}")
@@ -94,5 +115,55 @@ public class UserResource {
         }
     }
 
+    /**
+     * This API is used to determine the authentication of the user based on emailId,mobileNumber and password.
+     *
+     * @param password     unique password of user document.Cannot be {@code null}.
+     * @param emailId      unique emailId of user document.
+     * @param mobileNumber unique mobileNumber of user document.
+     * @return user document
+     * @throws IOException
+     */
+    @GET
+    @Path("/auth/password/{password}")
+    public Response authUser(@PathParam("password") String password, @QueryParam("emailId") String emailId,
+                             @QueryParam("mobileNumber") Long mobileNumber) throws IOException {
+        String testeMAIL = emailId;
+        Long mbl = mobileNumber;
+        String pass = password;
+        log.debug("Authenticate request for user");
+        try {
+            if (userService.authUser(emailId, mobileNumber, password)) {
+                return Response.ok().build();
+            } else {
+                return Response.noContent().build();
+                //TODO: Need to correct this later so as to show this user is not present.
+            }
+
+        } catch (IOException e) {
+            log.error("User does not exist and error is {}", e);
+            return Response.serverError().build();
+        }
+
+    }
+
+    /** public Response getAllUser(){
+     log.debug("Get record of all users");
+     try {
+     return Response.ok(userService.getAll()).build();
+     } catch (IOException e) {
+     log.error("Error getting user doc and error is {}", e);
+     return Response.serverError().build();
+     }
+
+     }*/
 
 }
+
+
+
+
+
+
+
+
