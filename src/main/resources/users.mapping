@@ -51,13 +51,16 @@
       {
         "analyzer": "email",
         "type": "text"
-
       },
       "mobileNumber": {
         "type": "long"
       },
       "password": {
         "type": "keyword"
+      },
+      "createdDate" : {
+        "type" : "date",
+        "format": "dd-MM-yyyy HH:mm:ss||dd-MM-yyyy||epoch_millis"
       }
     }
   }
