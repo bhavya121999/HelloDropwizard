@@ -31,7 +31,8 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.indore.api.UserRegistration;
 import com.indore.api.UserSearchResult;
 
 /**
@@ -56,30 +57,20 @@ public class UserService {
 	 *
 	 * @param user user document is JSON format. Cannot be {@code null}.
 	 */
-	public void add(JsonNode user) throws IOException {
-		String email = user.has(EMAIL_ID) ? user.get(EMAIL_ID).asText() : null;
-		String userId = user.has(USER_ID) ? user.get(USER_ID).asText() : null;
-		Long mobile = user.has(MOBILE_NUMBER) ? user.get(MOBILE_NUMBER).asLong() : null;
-
-		if (isUserExist(email, userId, mobile)) {
-			return;
+	public boolean add(UserRegistration userRegistration) throws IOException {
+		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
+			return false;
 		}
 
-        String userStr = user.toString();
+		userRegistration.setCreatedDate(System.currentTimeMillis());
+		ObjectMapper Obj = new ObjectMapper();
+		final String userStr = Obj.writeValueAsString(userRegistration);
         final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
-                .id(userId)
+                .id(userRegistration.getUserId())
                 .source(userStr, XContentType.JSON);
-        client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
-            @Override
-            public void onResponse(IndexResponse indexResponse) {
-                log.debug("Index Response for user id {} is {} ", indexRequest.id(), indexResponse);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                log.error("User document with id {} is failed to index and cause is {}", indexRequest.id(), e);
-            }
-        });
+        IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+        log.info("Index response for userid {} is {}", userRegistration.getUserId(), indexResponse.getResult());
+		return true;
     }
 
 	private boolean isUserExist(String email, String userId, Long mobile) throws IOException {

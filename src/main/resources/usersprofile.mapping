@@ -7,14 +7,6 @@
             "type": "lowercase"
           }
         },
-        "char_filter": {
-          "replace_dots": {
-            "type": "mapping",
-            "mappings": [
-              ".=>\\u0020"
-            ]
-          }
-        },
         "analyzer": {
           "lcKeyword": {
             "type": "custom",
@@ -22,48 +14,6 @@
               "lowercaseFilter"
             ],
             "tokenizer": "keyword"
-          },
-          "default": {
-            "type": "english",
-            "stopwords": "_none_"
-          },
-          "customstandard": {
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "char_filter": [
-              "replace_dots"
-            ],
-            "type": "custom",
-            "tokenizer": "standard"
-          },
-          "prefix": {
-            "type": "custom",
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "tokenizer": "edgeNGramTokenizer"
-          },
-          "whitespaceLowercase": {
-            "type": "custom",
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "tokenizer": "whitespace"
-          },
-          "lcSubstring": {
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "type": "custom",
-            "tokenizer": "loginNGram"
-          },
-          "email": {
-            "filter": [
-              "lowercaseFilter"
-            ],
-            "type": "custom",
-            "tokenizer": "emailTokenizer"
           }
         },
         "tokenizer": {
@@ -84,10 +34,6 @@
             "type": "nGram",
             "min_gram": "3",
             "max_gram": "50"
-          },
-          "emailTokenizer": {
-            "type": "pattern",
-            "pattern": "\\W+"
           }
         }
       },
@@ -99,15 +45,16 @@
   "mappings": {
     "properties": {
       "userId": {
-        "type": "keyword"
+        "analyzer": "lcKeyword",
+        "type": "text"
       },
       "address": {
         "type": "text"
       },
-      "currentCity": {
+      "city": {
         "type": "text"
       },
-      "homeTown": {
+      "hometown": {
         "type": "text"
       },
       "landmark": {
