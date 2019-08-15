@@ -55,7 +55,7 @@ public class UserService {
 	/**
 	 * Add user document to its index.
 	 *
-	 * @param user user document is JSON format. Cannot be {@code null}.
+	 * @param userRegistration user document is JSON format. Cannot be {@code null}.
 	 */
 	public boolean add(UserRegistration userRegistration) throws IOException {
 		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
@@ -185,7 +185,7 @@ public class UserService {
 
     }
 
-    private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
+   private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
         // TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
         RestStatus status = searchResponse.status();
         TimeValue took = searchResponse.getTook();

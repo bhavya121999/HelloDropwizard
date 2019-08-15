@@ -1,18 +1,34 @@
 package com.indore.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.indore.api.UserProfile;
+import com.indore.api.UserRegistration;
+import com.indore.api.UserSearchResult;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.indore.GalaxyApp.USERS_INDEX_NAME;
 import static com.indore.GalaxyApp.USERS_PROFILE_INDEX_NAME;
@@ -31,47 +47,46 @@ public class UsersProfileService {
      *
      * @param userProfile userProfile document is JSON format. Cannot be {@code null}.
      */
-    public void add(JsonNode userProfile) throws IOException {
-        String userId = userProfile.get("userId").asText();
-        String address = userProfile.get("address").asText();
-        String currentCity = userProfile.get("currentCity").asText();
-        String homeTown = userProfile.get("homeTown").asText();
-        String landmark = userProfile.get("landmark").asText();
-        String pincode = userProfile.get("pincode").asText();
-        String education = userProfile.get("education").asText();
-        String highSchool = userProfile.get("highSchool").asText();
-        String college = userProfile.get("college").asText();
-        String socialLink = userProfile.get("socialLink").asText();
-        String language = userProfile.get("language").asText();
-        String aboutYou = userProfile.get("aboutYou").asText();
-        String otherNames = userProfile.get("otherNames").asText();
-        String hobbies = userProfile.get("hobbies").asText();
-        String professionalSkills = userProfile.get("professionalSkills").asText();
-        String musicArtist = userProfile.get("musicArtist").asText();
-        String bookAuthor = userProfile.get("bookAuthor").asText();
-        String programmes = userProfile.get("programmes").asText();
-        String sportsTeam = userProfile.get("sportsTeam").asText();
-        String sportsPeople = userProfile.get("sportsPeople").asText();
-        String favouriteQuotes = userProfile.get("favouriteQuotes").asText();
-        String lifeEvents = userProfile.get("lifeEvents").asText();
-        String userStr = userProfile.toString();
-        final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME)
-                .id(userId)
+    public boolean add(UserProfile userProfile) throws IOException {
+        if (isUserExist(userProfile.getUserId())) {
+            return false;
+        }
+
+        userProfile.setCreatedDate(System.currentTimeMillis());
+        ObjectMapper Obj = new ObjectMapper();
+        final String userStr = Obj.writeValueAsString(userProfile);
+        final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
+                .id(userProfile.getUserId())
                 .source(userStr, XContentType.JSON);
-        client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
-            @Override
-            public void onResponse(IndexResponse indexResponse) {
-                log.debug("IndexProfile Response for user id {} is {} ", indexRequest.id(), indexResponse);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                log.error("User document with id {} is failed to index and cause is {}", indexRequest.id(), e);
-            }
-        });
-
+        IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+        log.info("Index response for userid {} is {}", userProfile.getUserId(), indexResponse.getResult());
+        return true;
     }
 
+    private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
+        if(email == null | userId == null | mobile ==null)
+            throw new IllegalArgumentException("email or userid or mobile can't be null");
+
+        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.minimumShouldMatch(1);
+        MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+        MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
+        MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+        boolQueryBuilder.should(emailMatchQueryBuilder);
+        boolQueryBuilder.should(userIdMatchQueryBuilder);
+        boolQueryBuilder.should(mobileMatchQueryBuilder);
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(boolQueryBuilder);
+        log.info("Search json {} for user exist", searchSourceBuilder.toString());
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
+        return (userSearchResults != null && userSearchResults.size() > 0);
+
+
+    }
     /**
      * get a userProfile document by its id from elasticsearch.
      *
