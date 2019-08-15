@@ -4,55 +4,55 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
 
 public class UserProfile {
-    private String userId ;//required
-    private  String address;//optional
-    private  String currentCity;//optional
-    private  String hometown;//optional
-    private String landmark;//optional
-    private  String pincode;//optional
-    private  String education;//optional
-    private  String highSchool;//optional
-    private  String college;//optional
-    private String socialLink;//optional
-    private  String language;//optional
-    private String aboutYou;//optional
-    private  String otherNames;//optional
-    private  String hobbies;//optional
-    private  String professionalSkills;//optional
-    private  String musicArtist;//optional
-    private  String bookAuthor;//optional
-    private  String programmes;//optional
-    private  String sportsTeam;//optional
-    private  String sportsPeople;//optional
-    private  String favouriteQuotes;//optional
-    private  String lifeEvents;//optional
-    private  long createdDate;
+    private final String userId ;//required
+    private  final String address;//optional
+    private  final String currentCity;//optional
+    private  final String hometown;//optional
+    private final String landmark;//optional
+    private  final String pincode;//optional
+    private  final String education;//optional
+    private  final String highSchool;//optional
+    private final String college;//optional
+    private final String socialLink;//optional
+    private  final String language;//optional
+    private final String aboutYou;//optional
+    private final String otherNames;//optional
+    private final String hobbies;//optional
+    private  final String professionalSkills;//optional
+    private  final String musicArtist;//optional
+    private final String bookAuthor;//optional
+    private final String programmes;//optional
+    private final String sportsTeam;//optional
+    private final String sportsPeople;//optional
+    private final String favouriteQuotes;//optional
+    private final String lifeEvents;//optional
+    private final long createdDate;
 
 
     private UserProfile(UserProfileBuilder builder) {
-        this.userId = userId;
-        this.address = address;
-        this.currentCity = currentCity;
-        this.hometown = hometown;
-        this.landmark = landmark;
-        this.pincode = pincode;
-        this.education = education;
-        this.highSchool = highSchool;
-        this.college = college;
-        this.socialLink = socialLink;
-        this.language = language;
-        this.aboutYou = aboutYou;
-        this.otherNames = otherNames;
-        this.hobbies = hobbies;
-        this.professionalSkills = professionalSkills;
-        this.musicArtist = musicArtist;
-        this.bookAuthor = bookAuthor;
-        this.programmes = programmes;
-        this.sportsTeam = sportsTeam;
-        this.sportsPeople = sportsPeople;
-        this.favouriteQuotes = favouriteQuotes;
-        this.lifeEvents = lifeEvents;
-        this.createdDate = createdDate;
+        this.userId = builder.userId;
+        this.address = builder.address;
+        this.currentCity = builder.currentCity;
+        this.hometown = builder.hometown;
+        this.landmark = builder.landmark;
+        this.pincode = builder.pincode;
+        this.education = builder.education;
+        this.highSchool = builder.highSchool;
+        this.college = builder.college;
+        this.socialLink = builder.socialLink;
+        this.language = builder.language;
+        this.aboutYou = builder.aboutYou;
+        this.otherNames = builder.otherNames;
+        this.hobbies =builder. hobbies;
+        this.professionalSkills =builder. professionalSkills;
+        this.musicArtist = builder.musicArtist;
+        this.bookAuthor = builder.bookAuthor;
+        this.programmes = builder.programmes;
+        this.sportsTeam = builder.sportsTeam;
+        this.sportsPeople = builder.sportsPeople;
+        this.favouriteQuotes = builder.favouriteQuotes;
+        this.lifeEvents =builder. lifeEvents;
+        this.createdDate = builder.createdDate;
     }
 
 
