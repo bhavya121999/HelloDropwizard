@@ -3,44 +3,33 @@ package com.indore.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.MoreObjects;
 
-public class UserProfile  {
-    private String userId;
-    private String address;
-    private String currentCity;
-    private String hometown;
-    private String landmark;
-    private String pincode;
-    private String education;
-    private String highSchool;
-    private String college;
-    private String socialLink;
-    private String language;
-    private String aboutYou;
-    private String otherNames;
+public class UserProfile {
+    private String userId ;//required
+    private  String address;//optional
+    private  String currentCity;//optional
+    private  String hometown;//optional
+    private String landmark;//optional
+    private  String pincode;//optional
+    private  String education;//optional
+    private  String highSchool;//optional
+    private  String college;//optional
+    private String socialLink;//optional
+    private  String language;//optional
+    private String aboutYou;//optional
+    private  String otherNames;//optional
+    private  String hobbies;//optional
+    private  String professionalSkills;//optional
+    private  String musicArtist;//optional
+    private  String bookAuthor;//optional
+    private  String programmes;//optional
+    private  String sportsTeam;//optional
+    private  String sportsPeople;//optional
+    private  String favouriteQuotes;//optional
+    private  String lifeEvents;//optional
+    private  long createdDate;
 
 
-
-    private String hobbies;
-    private String professionalSkills;
-    private String musicArtist;
-    private String bookAuthor;
-    private String programmes;
-    private String sportsTeam;
-    private String sportsPeople;
-    private String favouriteQuotes;
-    private String lifeEvents;
-    private long createdDate;
-
-    public UserProfile(){
-
-    }
-
-
-    public UserProfile(String userId, String address, String currentCity, String hometown, String landmark,
-                       String pincode, String education, String highSchool, String college, String socialLink,
-                       String language, String aboutYou, String otherNames, String hobbies, String professionalSkills,
-                       String musicArtist, String bookAuthor, String programmes, String sportsTeam, String sportsPeople,
-                       String favouriteQuotes, String lifeEvents, long createdDate) {
+    private UserProfile(UserProfileBuilder builder) {
         this.userId = userId;
         this.address = address;
         this.currentCity = currentCity;
@@ -63,223 +52,232 @@ public class UserProfile  {
         this.sportsPeople = sportsPeople;
         this.favouriteQuotes = favouriteQuotes;
         this.lifeEvents = lifeEvents;
-        this.createdDate=createdDate;
+        this.createdDate = createdDate;
     }
+
 
     public String getUserId() {
         return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getCurrentCity() {
         return currentCity;
-    }
-
-    public void setCurrentCity(String currentCity) {
-        this.currentCity = currentCity;
     }
 
     public String getHometown() {
         return hometown;
     }
 
-    public void setHometown(String hometown) {
-        this.hometown = hometown;
-    }
-
     public String getLandmark() {
         return landmark;
-    }
-
-    public void setLandmark(String landmark) {
-        this.landmark = landmark;
     }
 
     public String getPincode() {
         return pincode;
     }
 
-    public void setPincode(String pincode) {
-        this.pincode = pincode;
-    }
-
     public String getEducation() {
         return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
     }
 
     public String getHighSchool() {
         return highSchool;
     }
 
-    public void setHighSchool(String highSchool) {
-        this.highSchool = highSchool;
-    }
-
     public String getCollege() {
         return college;
-    }
-
-    public void setCollege(String college) {
-        this.college = college;
     }
 
     public String getSocialLink() {
         return socialLink;
     }
 
-    public void setSocialLink(String socialLink) {
-        this.socialLink = socialLink;
-    }
-
     public String getLanguage() {
         return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public String getAboutYou() {
         return aboutYou;
     }
 
-    public void setAboutYou(String aboutYou) {
-        this.aboutYou = aboutYou;
-    }
-
     public String getOtherNames() {
         return otherNames;
-    }
-
-    public void setOtherNames(String otherNames) {
-        this.otherNames = otherNames;
     }
 
     public String getHobbies() {
         return hobbies;
     }
 
-    public void setHobbies(String hobbies) {
-        this.hobbies = hobbies;
-    }
-
     public String getProfessionalSkills() {
         return professionalSkills;
-    }
-
-    public void setProfessionalSkills(String professionalSkills) {
-        this.professionalSkills = professionalSkills;
     }
 
     public String getMusicArtist() {
         return musicArtist;
     }
 
-    public void setMusicArtist(String musicArtist) {
-        this.musicArtist = musicArtist;
-    }
-
     public String getBookAuthor() {
         return bookAuthor;
-    }
-
-    public void setBookAuthor(String bookAuthor) {
-        this.bookAuthor = bookAuthor;
     }
 
     public String getProgrammes() {
         return programmes;
     }
 
-    public void setProgrammes(String programmes) {
-        this.programmes = programmes;
-    }
-
     public String getSportsTeam() {
         return sportsTeam;
-    }
-
-    public void setSportsTeam(String sportsTeam) {
-        this.sportsTeam = sportsTeam;
     }
 
     public String getSportsPeople() {
         return sportsPeople;
     }
 
-    public void setSportsPeople(String sportsPeople) {
-        this.sportsPeople = sportsPeople;
-    }
-
     public String getFavouriteQuotes() {
         return favouriteQuotes;
-    }
-
-    public void setFavouriteQuotes(String favouriteQuotes) {
-        this.favouriteQuotes = favouriteQuotes;
     }
 
     public String getLifeEvents() {
         return lifeEvents;
     }
 
-    public void setLifeEvents(String lifeEvents) {
-        this.lifeEvents = lifeEvents;
-    }
-
     public long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(long createdDate) {
-        this.createdDate = createdDate;
-    }
-
-
-
-
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("userId", userId)
-                .add("address", address)
-                .add("currentCity", currentCity)
-                .add("hometown", hometown)
-                .add("landmark", landmark)
-                .add("pincode", pincode)
-                .add("education",education)
-                .add("highSchool",highSchool)
-                .add("college",college)
-                .add("socialLink",socialLink)
-                .add("language",language)
-                .add("aboutYou",aboutYou)
-                .add("otherNames",otherNames)
-                .add("hobbies",hobbies) 
-                .add("professionalSkills",professionalSkills)
-                .add("musicArtist",musicArtist)
-                .add("bookAuthor",bookAuthor)
-                .add("programmes",programmes)
-                .add("sportsTeam",sportsTeam)
-                .add("sportsPeople",sportsPeople)
-                .add("favouriteQuotes",favouriteQuotes)
-                .add("lifeEvents",lifeEvents)
-                .add("createdDate", createdDate)
-                .toString();
+        return "UserProfile: " + this.userId + ", " + this.address + ", " + this.currentCity + ", " + this.hometown + ", " +
+                "" + this.landmark + ",  " + this.pincode + ", " + this.education + ", " + this.highSchool + ", " + this.college + ", " +
+                "" + this.socialLink + ", " + this.language + ", " + this.aboutYou + ", " + this.otherNames + ", " + this.hobbies + "," +
+                " " + this.professionalSkills + ", " + this.musicArtist + ", " + this.bookAuthor + ", " + this.programmes + ", " +
+                "" + this.sportsTeam + " , " + this.sportsPeople + ", " + this.favouriteQuotes + ", " + this.lifeEvents + ", " + this.createdDate;
     }
 
+    public static class UserProfileBuilder {
+        private final String userId;
+        private  String address;
+        private  String currentCity;
+        private  String hometown;
+        private  String landmark;
+        private  String pincode;
+        private  String education;
+        private  String highSchool;
+        private  String college;
+        private  String socialLink;
+        private  String language;
+        private  String aboutYou;
+        private  String otherNames;
+        private  String hobbies;
+        private  String professionalSkills;
+        private  String musicArtist;
+        private  String bookAuthor;
+        private  String programmes;
+        private  String sportsTeam;
+        private  String sportsPeople;
+        private  String favouriteQuotes;
+        private  String lifeEvents;
+        private  long createdDate;
 
+        public UserProfileBuilder(String userId) {
+            this.userId = userId;
+        }
+        public UserProfileBuilder address(String address) {
+            this.address = address;
+            return this;
+        }
+        public UserProfileBuilder currentCity(String currentCity) {
+            this.currentCity = currentCity;
+            return this;
+        }
+        public UserProfileBuilder hometown(String hometown) {
+            this.hometown = hometown;
+            return this;
+        }
+        public UserProfileBuilder landmark(String landmark) {
+            this.landmark = landmark;
+            return this;
+        }
+        public UserProfileBuilder pincode(String pincode) {
+            this.pincode = pincode;
+            return this;
+        }
+
+        public UserProfileBuilder education(String education) {
+            this.education = education;
+            return this;
+        }
+        public UserProfileBuilder highSchool(String highSchool) {
+            this.highSchool = highSchool;
+            return this;
+        }
+        public UserProfileBuilder college(String college) {
+            this.college = college;
+            return this;
+        }
+        public UserProfileBuilder socialLink(String socialLink) {
+            this.socialLink = socialLink;
+            return this;
+        } public UserProfileBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+        public UserProfileBuilder aboutYou(String aboutYou) {
+            this.aboutYou = aboutYou;
+            return this;
+        }
+        public UserProfileBuilder otherNames(String otherNames) {
+            this.otherNames = otherNames;
+            return this;
+        }
+        public UserProfileBuilder hobbies(String hobbies) {
+            this.hobbies = hobbies;
+            return this;
+        } public UserProfileBuilder professionalSkills(String professionalSkills) {
+            this.professionalSkills = professionalSkills;
+            return this;
+        }
+        public UserProfileBuilder musicArtist(String musicArtist) {
+            this.musicArtist = musicArtist;
+            return this;
+        }
+        public UserProfileBuilder bookAuthor(String bookAuthor) {
+            this.bookAuthor = bookAuthor;
+            return this;
+        }
+        public UserProfileBuilder programmes(String programmes) {
+            this.programmes = programmes;
+            return this;
+        }
+        public UserProfileBuilder sportsTeam(String sportsTeam) {
+            this.sportsTeam = sportsTeam;
+            return this;
+        }
+        public UserProfileBuilder sportsPeople(String sportsPeople) {
+            this.sportsPeople = sportsPeople;
+            return this;
+        }
+        public UserProfileBuilder favouriteQuotes(String favouriteQuotes) {
+            this.favouriteQuotes = favouriteQuotes;
+            return this;
+        }
+        public UserProfileBuilder lifeEvents(String lifeEvents) {
+            this.lifeEvents = lifeEvents;
+            return this;
+        }
+        public UserProfileBuilder createdDate(long createdDate) {
+            this.createdDate = createdDate;
+            return this;
+        }
+            public UserProfile build() {
+            UserProfile user =  new UserProfile(this);
+            validateUserObject(user);
+            return user;
+        }
+        private void validateUserObject(UserProfile user) {
+
+        }
+    }
 }
