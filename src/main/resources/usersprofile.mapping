@@ -110,6 +110,10 @@
       },
       "lifeEvents": {
         "type": "text"
+      },
+      "createdDate" : {
+        "type" : "date",
+        "format": "dd-MM-yyyy HH:mm:ss||dd-MM-yyyy||epoch_millis"
       }
     }
   }
