@@ -13,3 +13,7 @@ server:
 elasticsearchConfiguration:
   host: localhost
   port: 9500
+
+awsCredentials:
+  accesskey:
+  secretaccesskey :

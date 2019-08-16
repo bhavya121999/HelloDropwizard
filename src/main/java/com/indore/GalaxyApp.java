@@ -7,8 +7,10 @@ import java.util.Set;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 
+import com.indore.resources.ImageResource;
 import com.indore.resources.UsersProfileResource;
 import com.indore.services.UsersProfileService;
+
 import org.apache.http.HttpHost;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.elasticsearch.client.RequestOptions;
@@ -28,6 +30,7 @@ import com.indore.utils.JsonUtil;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 public class GalaxyApp extends Application<GalaxyConfiguration> {
 
@@ -64,10 +67,13 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         createIndex(restHighLevelClient);
         UserService userService = new UserService(restHighLevelClient);
         UsersProfileService userProfileService = new UsersProfileService(restHighLevelClient);
+        ImageResource imageResourceService = new ImageResource(configuration.getAwsConfig().getAccesskey(), configuration.getAwsConfig().getSecretaccesskey());
 
         // URL mapping
         environment.jersey().register(new UserResource(userService));
         environment.jersey().register(new UsersProfileResource(userProfileService));
+        environment.jersey().register(new ImageResource(configuration.getAwsConfig().getAccesskey(), configuration.getAwsConfig().getSecretaccesskey()));
+        environment.jersey().register(MultiPartFeature.class);
     }
 
 
