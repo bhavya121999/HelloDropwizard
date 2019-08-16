@@ -47,46 +47,47 @@ public class UsersProfileService {
      *
      * @param userProfile userProfile document is JSON format. Cannot be {@code null}.
      */
-    public boolean add(UserProfile userProfile) throws IOException {
-        if (isUserExist(userProfile.getUserId())) {
-            return false;
-        }
-
-        userProfile.setCreatedDate(System.currentTimeMillis());
-        ObjectMapper Obj = new ObjectMapper();
-        final String userStr = Obj.writeValueAsString(userProfile);
-        final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
-                .id(userProfile.getUserId())
+    public void add(JsonNode userProfile) throws IOException {
+        String userId = userProfile.get("userId").asText();
+        String address = userProfile.get("address").asText();
+        String currentCity = userProfile.get("currentCity").asText();
+        String homeTown= userProfile.get("homeTown").asText();
+        String landmark = userProfile.get("landmark").asText();
+        String pincode = userProfile.get("pincode").asText();
+        String education = userProfile.get("education").asText();
+        String highSchool = userProfile.get("highSchool").asText();
+        String college = userProfile.get("college").asText();
+        String socialLink = userProfile.get("socialLink").asText();
+        String language = userProfile.get("language").asText();
+        String aboutYou = userProfile.get("aboutYou").asText();
+        String otherNames = userProfile.get("otherNames").asText();
+        String hobbies = userProfile.get("hobbies").asText();
+        String professionalSkills = userProfile.get("professionalSkills").asText();
+        String musicArtist = userProfile.get("musicArtist").asText();
+        String bookAuthor = userProfile.get("bookAuthor").asText();
+        String programmes = userProfile.get("programmes").asText();
+        String sportsTeam = userProfile.get("sportsTeam").asText();
+        String sportsPeople = userProfile.get("sportsPeople").asText();
+        String favouriteQuotes = userProfile.get("favouriteQuotes").asText();
+        String lifeEvents= userProfile.get("lifeEvents").asText();
+        String userStr = userProfile.toString();
+        final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME )
+                .id(userId)
                 .source(userStr, XContentType.JSON);
-        IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-        log.info("Index response for userid {} is {}", userProfile.getUserId(), indexResponse.getResult());
-        return true;
-    }
+        client.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+            @Override
+            public void onResponse(IndexResponse indexResponse) {
+                log.debug("IndexProfile Response for user id {} is {} ", indexRequest.id(), indexResponse);
+            }
 
-    private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
-        if(email == null | userId == null | mobile ==null)
-            throw new IllegalArgumentException("email or userid or mobile can't be null");
-
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.minimumShouldMatch(1);
-        MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
-        MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
-        MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
-        boolQueryBuilder.should(emailMatchQueryBuilder);
-        boolQueryBuilder.should(userIdMatchQueryBuilder);
-        boolQueryBuilder.should(mobileMatchQueryBuilder);
-
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(boolQueryBuilder);
-        log.info("Search json {} for user exist", searchSourceBuilder.toString());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
-        return (userSearchResults != null && userSearchResults.size() > 0);
-
+            @Override
+            public void onFailure(Exception e) {
+                log.error("User document with id {} is failed to index and cause is {}", indexRequest.id(), e);
+            }
+        });
 
     }
+
     /**
      * get a userProfile document by its id from elasticsearch.
      *
