@@ -19,14 +19,12 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.indore.resources.UserResource;
 import com.indore.services.UserService;
 import com.indore.utils.JsonUtil;
-
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -67,12 +65,15 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         createIndex(restHighLevelClient);
         UserService userService = new UserService(restHighLevelClient);
         UsersProfileService userProfileService = new UsersProfileService(restHighLevelClient);
-        ImageResource imageResourceService = new ImageResource(configuration.getAwsConfig().getAccesskey(), configuration.getAwsConfig().getSecretaccesskey());
+        ImageResource imageResourceService = new ImageResource(configuration.getAwsConfig().getAccesskey(),
+                configuration.getAwsConfig().getSecretaccesskey(),configuration.getAwsConfig().getBucketname(),
+                configuration.getAwsConfig().getClientregion());
 
         // URL mapping
         environment.jersey().register(new UserResource(userService));
         environment.jersey().register(new UsersProfileResource(userProfileService));
-        environment.jersey().register(new ImageResource(configuration.getAwsConfig().getAccesskey(), configuration.getAwsConfig().getSecretaccesskey()));
+        environment.jersey().register(new ImageResource(configuration.getAwsConfig().getAccesskey(), configuration.getAwsConfig().getSecretaccesskey(),
+                configuration.getAwsConfig().getBucketname(),configuration.getAwsConfig().getClientregion() ));
         environment.jersey().register(MultiPartFeature.class);
     }
 

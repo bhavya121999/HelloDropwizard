@@ -1,21 +1,28 @@
 package com.indore.resources;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.*;
-import java.net.URL;
 
 /**
  * Resource for user's album.
@@ -24,24 +31,32 @@ import java.net.URL;
  */
 @Path("/image")
 public class ImageResource {
-    private static final Logger log = LoggerFactory.getLogger(UserResource.class);
+    private static final Logger log = LoggerFactory.getLogger(ImageResource.class);
 
     String accessKey;
     String secretAccesKey;
-    public ImageResource(String accessKey, String secretAccesKey) {
+    String bucketname;
+    String clientregion;
+    public ImageResource(String accessKey, String secretAccesKey, String bucketname, String clientregion) {
         this.accessKey=accessKey;
         this.secretAccesKey=secretAccesKey;
+        this.bucketname=bucketname;
+        this.clientregion=clientregion;
+
+
     }
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/upload")
     public Response imageUpload(@FormDataParam("file") final InputStream inputStream) {
        String uploadedFileLocation="";
+       String location="/home/bhavya/Desktop/";
         try{
             //Double fileName= Math.floor(Math.random() * 90000000);
-            uploadedFileLocation = "/home/bhavya/Desktop/"  + "demo.jpeg";
 
+            uploadedFileLocation = location + "demo.jpeg";
             writeToFile(inputStream, uploadedFileLocation);
+            //TODO: Need to create a unique file name and look into file type.
             uploadFileToS3(uploadedFileLocation, "demo", ".jpeg");
         }
         catch (Exception e){
@@ -58,11 +73,11 @@ public class ImageResource {
     private void uploadFileToS3(String uploadedFileLocation, String fileName, String fileType) {
 
         // to create a client connection to access Amazon S3 web service.
-        String bucketname="imagesuploaded";
+
         AWSCredentials credentials = new BasicAWSCredentials(
                 accessKey,secretAccesKey
         );
-        String clientregion = "ap-south-1";
+
 
         // configure the S3 client.
         AmazonS3 s3client = AmazonS3ClientBuilder
@@ -70,6 +85,15 @@ public class ImageResource {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(clientregion)
                 .build();
+
+
+        if(s3client.doesBucketExist(bucketname)) {
+            log.info("Bucket name is not available."
+                    + " Try again with a different Bucket name.");
+            return;
+        }
+
+        s3client.createBucket(bucketname);
 
         // Uploading Objects
         s3client.putObject(
