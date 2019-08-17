@@ -45,14 +45,14 @@ public class UsersProfileService {
 	 * @param userProfile userProfile document is JSON format. Cannot be {@code null}.
 	 */
 	public boolean add(UserProfile userProfile) throws IOException {
-		if (isUserIdExist(userProfile.getUserId())) {
+		if (!isUserIdExist(userProfile.getUserId())) {
 			return false;
 		}
 
 		// TODO:- Need to handle creation date and other mutable properties in user profile builder.
 		ObjectMapper Obj = new ObjectMapper();
 		final String userStr = Obj.writeValueAsString(userProfile);
-		final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
+		final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME)
 				.id(userProfile.getUserId())
 				.source(userStr, XContentType.JSON);
 		IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);

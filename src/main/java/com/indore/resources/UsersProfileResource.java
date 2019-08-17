@@ -1,21 +1,23 @@
 package com.indore.resources;
 
-import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.indore.services.UsersProfileService;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.xcontent.XContentType;
+import java.io.IOException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
+import com.codahale.metrics.annotation.Timed;
+import com.indore.api.UserProfile;
+import com.indore.services.UsersProfileService;
 
 
 /**
@@ -42,10 +44,10 @@ public class UsersProfileResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
-    public Response createUserProfile(JsonNode userProfile) {
+    public Response createUserProfile(UserProfile userProfile) {
 
         try {
-            log.debug("User doc is {}", userProfile);
+            log.debug("User profile doc is {}", userProfile);
             usersProfileService.add(userProfile);
             return Response.ok().build();
         } catch (Exception e) {
