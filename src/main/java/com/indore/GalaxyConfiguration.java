@@ -6,6 +6,7 @@ import io.dropwizard.Configuration;
 
 public class GalaxyConfiguration extends Configuration {
     private ElasticsearchConfig elasticsearchConfig;
+    private AwsConfig awsConfig;
 
     @JsonProperty("elasticsearchConfiguration")
     public ElasticsearchConfig getElasticsearchConfig() {
@@ -15,4 +16,14 @@ public class GalaxyConfiguration extends Configuration {
     public void setElasticsearchConfig(ElasticsearchConfig elasticsearchConfig) {
         this.elasticsearchConfig = elasticsearchConfig;
     }
+
+    @JsonProperty("awsCredentials")
+    public AwsConfig getAwsConfig() {
+        return awsConfig;
+    }
+
+    public void setAwsConfig(AwsConfig awsConfig) {
+        this.awsConfig = awsConfig;
+    }
+
 }
