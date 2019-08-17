@@ -17,7 +17,7 @@ public class GalaxyConfiguration extends Configuration {
         this.elasticsearchConfig = elasticsearchConfig;
     }
 
-    @JsonProperty("awsCredentials")
+    @JsonProperty("awsConfig")
     public AwsConfig getAwsConfig() {
         return awsConfig;
     }

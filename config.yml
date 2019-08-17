@@ -14,6 +14,8 @@ elasticsearchConfiguration:
   host: localhost
   port: 9500
 
-awsCredentials:
+awsConfig:
   accesskey:
-  secretaccesskey :
+  secretaccesskey:
+  clientregion:
+  bucketname: 
