@@ -209,11 +209,9 @@ public class UserService {
             String firstName = (String) sourceAsMap.get("firstName");
             String lastName = (String) sourceAsMap.get("lastName");
             String emailId = (String) sourceAsMap.get("emailId");
-            String password = (String) sourceAsMap.get("password");
             String userId = (String) sourceAsMap.get("userId");
 
-
-            UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, password, userId,
+            UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, userId,
                     score);
             userSearchResults.add(userSearchResult);
         }

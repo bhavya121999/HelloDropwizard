@@ -13,8 +13,7 @@ public final class UserSearchResult {
     private final float score;
     private final String userId;
 
-    public UserSearchResult(String firstName, String lastName, String emailId, String password, String userId,
-                            float score) {
+    public UserSearchResult(String firstName, String lastName, String emailId, String userId, float score) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
