@@ -1,12 +1,11 @@
 package com.indore.utils;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * <File Description>.
@@ -24,16 +23,19 @@ public class JsonUtil {
      * @param fileName file which needs to be read into JSON.
      * @return
      */
-    public JsonNode getJson(String fileName) {
+    public String getJson(String fileName) throws IOException {
         JsonFactory jsonFactory = new JsonFactory();
-        File file = new File(getClass().getClassLoader().getResource(fileName).getFile());
-        try {
-            JsonParser jp = jsonFactory.createParser(file);
-            jp.setCodec(new ObjectMapper());
-            return jp.readValueAsTree();
-        } catch (IOException e) {
-            //log.error("Error reading json file {}", fileName, e);
-            return null;
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        InputStream in = classLoader.getResourceAsStream(fileName);
+        //File file = new File(classLoader.getResource(fileName).getFile());
+
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = in.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
         }
+
+        return result.toString(StandardCharsets.UTF_8.name());
     }
 }

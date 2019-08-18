@@ -1,15 +1,12 @@
 package com.indore;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.Set;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
-
-import com.indore.resources.ImageResource;
-import com.indore.resources.UsersProfileResource;
-import com.indore.services.UsersProfileService;
 
 import org.apache.http.HttpHost;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -19,16 +16,20 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
-import com.fasterxml.jackson.databind.JsonNode;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
+import com.indore.resources.ImageResource;
 import com.indore.resources.UserResource;
+import com.indore.resources.UsersProfileResource;
 import com.indore.services.UserService;
+import com.indore.services.UsersProfileService;
 import com.indore.utils.JsonUtil;
+
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 public class GalaxyApp extends Application<GalaxyConfiguration> {
 
@@ -53,7 +54,7 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
 
     @Override
     public void run(final GalaxyConfiguration configuration,
-                    final Environment environment) throws IOException {
+                    final Environment environment) throws IOException, URISyntaxException {
 
         addCors(environment);
 
@@ -93,13 +94,13 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 
-    private void createIndex(RestHighLevelClient client) throws IOException {
+    private void createIndex(RestHighLevelClient client) throws IOException, URISyntaxException {
         for (String indexName : INDICES) {
             if (!isIndexExist(client, indexName)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonUtil jsonUtil = new JsonUtil();
-                JsonNode indexJson = jsonUtil.getJson(indexName + ".mapping");
-                String indexString = objectMapper.writeValueAsString(indexJson);
+                String indexString = jsonUtil.getJson(indexName + ".mapping");
+                //String indexString = objectMapper.writeValueAsString(indexJson);
                 CreateIndexRequest request = new CreateIndexRequest(indexName);
                 request.source(indexString, XContentType.JSON);
                 client.indices().create(request, RequestOptions.DEFAULT);

@@ -83,11 +83,11 @@
     </dependencies>
 
     <build>
-        <resources>
+        <!--<resources>
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-        </resources>
+        </resources>-->
         <plugins>
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
