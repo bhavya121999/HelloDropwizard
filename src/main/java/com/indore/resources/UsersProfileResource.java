@@ -2,6 +2,7 @@ package com.indore.resources;
 
 import java.io.IOException;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -44,7 +45,7 @@ public class UsersProfileResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
-    public Response createUserProfile(UserProfile userProfile) {
+    public Response createUserProfile(@Valid  UserProfile userProfile) {
 
         try {
             log.debug("User profile doc is {}", userProfile);
