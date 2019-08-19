@@ -2,6 +2,7 @@ package com.indore.resources;
 
 import java.io.IOException;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -41,7 +42,7 @@ public class UserResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response createUser(UserRegistration userRegistration) {
+	public Response createUser(@Valid UserRegistration userRegistration) {
 		try {
 			log.debug("User registration doc is {}", userRegistration.toString());
 			boolean userCreated = userService.add(userRegistration);

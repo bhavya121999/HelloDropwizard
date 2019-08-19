@@ -1,7 +1,12 @@
 package com.indore.api;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserProfile {
+	// Required fields
     private String userId;                 //required
+
+    @NotEmpty
     private String address;                //required
     private String currentCity;            //required
     private String hometown;               //required
@@ -10,6 +15,8 @@ public class UserProfile {
     private String college;                 //required
     private String aboutYou;                //required
     private String professionalSkills;     //required
+
+	// Optional fields.
     private String pincode;                //optional
     private String highSchool;             //optional
     private String socialLink;              //optional
@@ -165,6 +172,7 @@ public class UserProfile {
         private final String college;
         private final String aboutYou;
         private final String professionalSkills;
+
         private String pincode;
         private String highSchool;
         private String socialLink;

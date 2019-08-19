@@ -1,19 +1,29 @@
 package com.indore.api;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.google.common.base.MoreObjects;
 
 /**
- * <File Description>.
+ * User registration API.
  *
  * @author Amit Khandelwal
  */
+
 public class UserRegistration {
+	@NotEmpty
 	private String userId;
+	@NotEmpty
 	private String firstName;
+	@NotEmpty
 	private String lastName;
+	@NotEmpty
 	private String emailId;
+	
 	private long mobileNumber;
+	@NotEmpty
 	private String password;
+
 	private long createdDate;
 
 	public UserRegistration() {
