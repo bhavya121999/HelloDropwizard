@@ -46,7 +46,6 @@ public class UsersProfileResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
     public Response createUserProfile(@Valid  UserProfile userProfile) {
-
         try {
             log.debug("User profile doc is {}", userProfile);
             usersProfileService.add(userProfile);

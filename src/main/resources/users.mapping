@@ -20,13 +20,7 @@
               "lowercaseFilter"
             ],
             "type": "custom",
-            "tokenizer": "emailTokenizer"
-          }
-        },
-        "tokenizer": {
-          "emailTokenizer": {
-            "type": "pattern",
-            "pattern": "\\W+"
+            "tokenizer": "uax_url_email"
           }
         }
       },

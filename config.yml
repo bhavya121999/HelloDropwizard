@@ -2,6 +2,7 @@ logging:
   level: INFO
   loggers:
     com.indore: DEBUG
+    io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper: DEBUG
 server:
   applicationConnectors:
     - type: http

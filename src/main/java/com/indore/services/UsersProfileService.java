@@ -31,7 +31,7 @@ import com.indore.api.UserSearchResult;
 import com.indore.client.ElasticsearchClient;
 
 public class UsersProfileService {
-	private static final Logger log = LoggerFactory.getLogger(UserService.class);
+	private static final Logger log = LoggerFactory.getLogger(UserRegisterationService.class);
 
 	private final ElasticsearchClient esClient;
 

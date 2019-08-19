@@ -1,5 +1,7 @@
 package com.indore.api;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserProfile {
@@ -14,8 +16,8 @@ public class UserProfile {
     private String hometown;
     @NotEmpty
     private String landmark;
-    @NotEmpty
-    private String pincode;
+    @NotNull
+    private Integer pincode;
     @NotEmpty
     private String education;
     @NotEmpty
@@ -91,7 +93,7 @@ public class UserProfile {
         return landmark;
     }
 
-    public String getPincode() {
+    public Integer getPincode() {
         return pincode;
     }
 
@@ -177,7 +179,7 @@ public class UserProfile {
         private final String currentCity;
         private final String hometown;
         private final String landmark;
-        private final String pincode;
+        private final Integer pincode;
         private final String education;
         private final String college;
         private final String aboutYou;
@@ -198,7 +200,8 @@ public class UserProfile {
         private String lifeEvents;
         private long createdDate;
 
-        public UserProfileBuilder(String userId, String address, String currentCity, String hometown, String landmark, String education, String college, String aboutYou, String professionalSkills, String pincode) {
+        public UserProfileBuilder(String userId, String address, String currentCity, String hometown, String landmark
+                , String education, String college, String aboutYou, String professionalSkills, Integer pincode) {
             this.userId = userId;
             this.address = address;
             this.currentCity = currentCity;

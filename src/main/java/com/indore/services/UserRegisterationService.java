@@ -39,15 +39,15 @@ import com.indore.client.ElasticsearchClient;
  *
  * @author Amit Khandelwal
  */
-public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+public class UserRegisterationService {
+    private static final Logger log = LoggerFactory.getLogger(UserRegisterationService.class);
 
 	private final ElasticsearchClient esclient;
 	private final String EMAIL_ID = "emailId";
 	private final String USER_ID = "userId";
 	private final String MOBILE_NUMBER = "mobileNumber";
 
-    public UserService(ElasticsearchClient esclient) {
+    public UserRegisterationService(ElasticsearchClient esclient) {
         this.esclient = esclient;
     }
 
@@ -56,7 +56,7 @@ public class UserService {
 	 *
 	 * @param userRegistration user document is JSON format. Cannot be {@code null}.
 	 */
-	public boolean add(UserRegistration userRegistration) throws IOException {
+	public boolean register(UserRegistration userRegistration) throws IOException {
 		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
 			return false;
 		}
@@ -72,9 +72,6 @@ public class UserService {
     }
 
 	private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
-		if(email == null | userId == null | mobile ==null)
-			throw new IllegalArgumentException("email or userid or mobile can't be null");
-
 		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
 		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 		boolQueryBuilder.minimumShouldMatch(1);

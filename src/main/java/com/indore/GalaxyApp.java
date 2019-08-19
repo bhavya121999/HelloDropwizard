@@ -24,7 +24,7 @@ import com.indore.client.ElasticsearchClient;
 import com.indore.resources.ImageResource;
 import com.indore.resources.UserResource;
 import com.indore.resources.UsersProfileResource;
-import com.indore.services.UserService;
+import com.indore.services.UserRegisterationService;
 import com.indore.services.UsersProfileService;
 import com.indore.utils.JsonUtil;
 
@@ -67,14 +67,14 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
 
 		// TODO :- need to move creating indices logic to a utility.
 		createIndex(restHighLevelClient);
-		UserService userService = new UserService(elasticsearchClient);
+		UserRegisterationService userRegisterationService = new UserRegisterationService(elasticsearchClient);
 		UsersProfileService userProfileService = new UsersProfileService(elasticsearchClient);
 		ImageResource imageResourceService = new ImageResource(configuration.getAwsConfig().getAccesskey(),
 				configuration.getAwsConfig().getSecretaccesskey(), configuration.getAwsConfig().getBucketname(),
 				configuration.getAwsConfig().getClientregion());
 
 		// URL mapping
-		environment.jersey().register(new UserResource(userService));
+		environment.jersey().register(new UserResource(userRegisterationService));
 		environment.jersey().register(new UsersProfileResource(userProfileService));
 		environment.jersey().register(new ImageResource(configuration.getAwsConfig().getAccesskey(),
 				configuration.getAwsConfig().getSecretaccesskey(),

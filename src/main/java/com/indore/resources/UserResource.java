@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.annotation.Timed;
 import com.indore.api.SearchParameter;
 import com.indore.api.UserRegistration;
-import com.indore.services.UserService;
+import com.indore.services.UserRegisterationService;
 
 /**
  * User resource to create an entity for indexing the document, search request, getting doc by id. .
@@ -33,10 +33,10 @@ import com.indore.services.UserService;
 public class UserResource {
 	private static final Logger log = LoggerFactory.getLogger(UserResource.class);
 
-	private final UserService userService;
+	private final UserRegisterationService userRegisterationService;
 
-	public UserResource(UserService userService) {
-		this.userService = userService;
+	public UserResource(UserRegisterationService userRegisterationService) {
+		this.userRegisterationService = userRegisterationService;
 	}
 
 	@POST
@@ -45,9 +45,9 @@ public class UserResource {
 	public Response createUser(@Valid UserRegistration userRegistration) {
 		try {
 			log.debug("User registration doc is {}", userRegistration.toString());
-			boolean userCreated = userService.add(userRegistration);
+			boolean userCreated = userRegisterationService.register(userRegistration);
 			if (userCreated) {
-				return Response.ok().build();
+				return Response.ok("user with id: " + userRegistration.getUserId() + "created successfully").build();
 			} else {
 				return Response.ok("User already exist").build();
 			}
@@ -70,7 +70,7 @@ public class UserResource {
 	public Response getUser(@PathParam("id") @NotEmpty String id) {
 		log.debug("Get request for user id {}", id);
 		try {
-			return Response.ok(userService.get(id)).build();
+			return Response.ok(userRegisterationService.get(id)).build();
 		} catch (IOException e) {
 			log.error("Error getting user doc {} and error is {}", id, e);
 			return Response.serverError().build();
@@ -90,7 +90,7 @@ public class UserResource {
 	public Response searchUsers(SearchParameter searchParameter) {
 		log.debug("Search term {}", searchParameter.getSearchTerm());
 		try {
-			return Response.ok(userService.search(searchParameter.getSearchTerm())).build();
+			return Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
 		} catch (IOException e) {
 			log.error("Error getting search results for search term {} ", searchParameter.getSearchTerm(), e);
 			return Response.serverError().build();
@@ -111,7 +111,7 @@ public class UserResource {
 	public Response deleteUser(@PathParam("userId") String userId) {
 		log.debug("Delete request for message id {}", userId);
 		try {
-			userService.delete(userId);
+			userRegisterationService.delete(userId);
 			return Response.ok().build();
 		} catch (IOException e) {
 			log.error("Error deleting user document {} and error is {}", userId, e);
@@ -137,7 +137,7 @@ public class UserResource {
 		String pass = password;
 		log.debug("Authenticate request for user");
 		try {
-			if (userService.authUser(emailId, mobileNumber, password)) {
+			if (userRegisterationService.authUser(emailId, mobileNumber, password)) {
 				return Response.ok().build();
 			} else {
 				return Response.noContent().build();
@@ -156,20 +156,18 @@ public class UserResource {
 	 *
 	 * @return All the documents indexed
 	 */
-	 @GET
-	 @Produces(MediaType.APPLICATION_JSON)
-	 @Timed
-
-	 public Response getAllUser(){
-	 log.debug("Get record of all users");
-	 try {
-	 return Response.ok(userService.getAll()).build();
-	 } catch (IOException e) {
-	 log.error("Error getting user doc and error is {}", e);
-	 return Response.serverError().build();
-	 }
-
-	 }
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Timed
+	public Response getAllUser() {
+		log.debug("Get record of all users");
+		try {
+			return Response.ok(userRegisterationService.getAll()).build();
+		} catch (IOException e) {
+			log.error("Error getting user doc and error is {}", e);
+			return Response.serverError().build();
+		}
+	}
 
 }
 
