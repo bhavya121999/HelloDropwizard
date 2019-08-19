@@ -15,7 +15,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -29,14 +28,15 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.indore.api.UserProfile;
 import com.indore.api.UserSearchResult;
+import com.indore.client.ElasticsearchClient;
 
 public class UsersProfileService {
 	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-	private final RestHighLevelClient client;
+	private final ElasticsearchClient esClient;
 
-	public UsersProfileService(RestHighLevelClient client) {
-		this.client = client;
+	public UsersProfileService(ElasticsearchClient esClient) {
+		this.esClient = esClient;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class UsersProfileService {
 		final IndexRequest indexRequest = new IndexRequest(USERS_PROFILE_INDEX_NAME)
 				.id(userProfile.getUserId())
 				.source(userStr, XContentType.JSON);
-		IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+		IndexResponse indexResponse = esClient.index(indexRequest, RequestOptions.DEFAULT);
 		log.info("Index response for userid {} is {}", userProfile.getUserId(), indexResponse.getResult());
 		return true;
 	}
@@ -74,7 +74,7 @@ public class UsersProfileService {
 		searchSourceBuilder.query(boolQueryBuilder);
 		log.info("Search json {} for user exist", searchSourceBuilder.toString());
 		searchRequest.source(searchSourceBuilder);
-		SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+		SearchResponse searchResponse = esClient.search(searchRequest, RequestOptions.DEFAULT);
 		List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
 		return (userSearchResults != null && userSearchResults.size() > 0);
 	}
@@ -114,7 +114,7 @@ public class UsersProfileService {
 			throw new IllegalArgumentException("arguments can't be null");
 		}
 		GetRequest getRequest = new GetRequest(USERS_PROFILE_INDEX_NAME, id);
-		GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+		GetResponse getResponse = esClient.get(getRequest, RequestOptions.DEFAULT);
 		return getResponse.getSourceAsString();
 	}
 }

@@ -1,5 +1,7 @@
 package com.indore.api;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchParameter {
+	@NotEmpty
     private String searchTerm;
 
     public SearchParameter() {

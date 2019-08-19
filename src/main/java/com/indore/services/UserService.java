@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -17,7 +15,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -34,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.indore.api.UserRegistration;
 import com.indore.api.UserSearchResult;
+import com.indore.client.ElasticsearchClient;
 
 /**
  * User service to deal with user's documents in elasticsearch.
@@ -43,13 +41,13 @@ import com.indore.api.UserSearchResult;
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-	private final RestHighLevelClient client;
+	private final ElasticsearchClient esclient;
 	private final String EMAIL_ID = "emailId";
 	private final String USER_ID = "userId";
 	private final String MOBILE_NUMBER = "mobileNumber";
 
-    public UserService(RestHighLevelClient client) {
-        this.client = client;
+    public UserService(ElasticsearchClient esclient) {
+        this.esclient = esclient;
     }
 
 	/**
@@ -68,8 +66,7 @@ public class UserService {
         final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
                 .id(userRegistration.getUserId())
                 .source(userStr, XContentType.JSON);
-        IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-        log.info("Index response for userid {} is {}", userRegistration.getUserId(), indexResponse.getResult());
+        IndexResponse indexResponse = esclient.index(indexRequest, RequestOptions.DEFAULT);
 		return true;
     }
 
@@ -91,7 +88,7 @@ public class UserService {
         searchSourceBuilder.query(boolQueryBuilder);
         log.info("Search json {} for user exist", searchSourceBuilder.toString());
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
         List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
         return (userSearchResults != null && userSearchResults.size() > 0);
 
@@ -141,7 +138,7 @@ public class UserService {
         searchSourceBuilder.query(boolQueryBuilder);
         log.info("Search json {} for user exist", searchSourceBuilder.toString());
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
         List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
         return (userSearchResults != null && userSearchResults.size() > 0);
 
@@ -161,7 +158,7 @@ public class UserService {
             throw new IllegalArgumentException("arguments can't be null");
         }
         GetRequest getRequest = new GetRequest(USERS_INDEX_NAME, id);
-        GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+        GetResponse getResponse = esclient.get(getRequest, RequestOptions.DEFAULT);
         return getResponse.getSourceAsString();
     }
 
@@ -180,7 +177,7 @@ public class UserService {
         multiMatchQueryBuilder.operator(Operator.AND);
         searchSourceBuilder.query(multiMatchQueryBuilder);
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
         return getUserSearchResults(searchResponse);
 
     }
@@ -227,17 +224,7 @@ public class UserService {
      */
     public void delete(String userId) throws IOException {
         final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, userId);
-        client.deleteAsync(deleterequest, RequestOptions.DEFAULT, new ActionListener<DeleteResponse>() {
-            @Override
-            public void onResponse(DeleteResponse deleteResponse) {
-                log.debug("Delete Response for user id {} is {} ", deleterequest.id(), deleteResponse);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                log.error("User document with id {} is failed to delete and cause is {}", deleterequest.id(), e);
-            }
-        });
+        esclient.delete(deleterequest, RequestOptions.DEFAULT);
     }
 
 // get all API
@@ -246,7 +233,7 @@ public class UserService {
      throw new IllegalArgumentException("arguments can't be null");
      }
      GetRequest getRequest = new GetRequest(USERS_INDEX_NAME);
-     GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+     GetResponse getResponse = esclient.get(getRequest, RequestOptions.DEFAULT);
 
      return getResponse.getSourceAsString();
      }*/

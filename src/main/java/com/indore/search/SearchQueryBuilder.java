@@ -1,10 +1,12 @@
 package com.indore.search;
 
 /**
- * <File Description>.
+ * Search query builder for app.
  *
  * @author Amit Khandelwal
  */
-public class UserSearchQueryBuilder {
+
+public class SearchQueryBuilder {
+
 
 }
