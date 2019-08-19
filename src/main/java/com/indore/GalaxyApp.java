@@ -21,9 +21,12 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.indore.client.ElasticsearchClient;
+import com.indore.client.S3Client;
+import com.indore.config.GalaxyConfiguration;
 import com.indore.resources.ImageResource;
 import com.indore.resources.UserResource;
 import com.indore.resources.UsersProfileResource;
+import com.indore.services.ImageService;
 import com.indore.services.UserRegisterationService;
 import com.indore.services.UsersProfileService;
 import com.indore.utils.JsonUtil;
@@ -59,26 +62,27 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
 
 		addCors(environment);
 
-		ElasticsearchClient elasticsearchClient = new ElasticsearchClient(configuration.getElasticsearchConfig());
 		RestHighLevelClient restHighLevelClient = new RestHighLevelClient(
 				RestClient.builder(new HttpHost(configuration.getElasticsearchConfig().getHost(),
 						configuration.getElasticsearchConfig().getPort(),
 						"http")));
-
 		// TODO :- need to move creating indices logic to a utility.
 		createIndex(restHighLevelClient);
+
+		// Clients
+		ElasticsearchClient elasticsearchClient = new ElasticsearchClient(configuration.getElasticsearchConfig());
+		S3Client s3Client = new S3Client(configuration.getAwsConfig());
+
+
+		// Services
 		UserRegisterationService userRegisterationService = new UserRegisterationService(elasticsearchClient);
 		UsersProfileService userProfileService = new UsersProfileService(elasticsearchClient);
-		ImageResource imageResourceService = new ImageResource(configuration.getAwsConfig().getAccesskey(),
-				configuration.getAwsConfig().getSecretaccesskey(), configuration.getAwsConfig().getBucketname(),
-				configuration.getAwsConfig().getClientregion());
+		ImageService imageService = new ImageService(s3Client);
 
 		// URL mapping
 		environment.jersey().register(new UserResource(userRegisterationService));
 		environment.jersey().register(new UsersProfileResource(userProfileService));
-		environment.jersey().register(new ImageResource(configuration.getAwsConfig().getAccesskey(),
-				configuration.getAwsConfig().getSecretaccesskey(),
-				configuration.getAwsConfig().getBucketname(), configuration.getAwsConfig().getClientregion()));
+		environment.jersey().register(new ImageResource(imageService));
 		environment.jersey().register(MultiPartFeature.class);
 	}
 

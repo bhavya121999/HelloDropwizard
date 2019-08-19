@@ -1,4 +1,4 @@
-package com.indore;
+package com.indore.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -2,8 +2,6 @@ package com.indore.client;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -19,7 +17,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.indore.ElasticsearchConfig;
+import com.indore.config.ElasticsearchConfig;
 
 /**
  * Exit point to all ES calls in app.
@@ -30,7 +28,6 @@ public class ElasticsearchClient {
 	private static final Logger log = LoggerFactory.getLogger(ElasticsearchClient.class);
 	private final RestHighLevelClient client;
 
-	@Inject
 	public ElasticsearchClient(ElasticsearchConfig elasticsearchConfig) {
 		client = new RestHighLevelClient(RestClient.builder(new HttpHost(elasticsearchConfig.getHost(),
 				elasticsearchConfig.getPort(), "http")));
