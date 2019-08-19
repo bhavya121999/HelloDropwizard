@@ -21,6 +21,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -227,15 +228,23 @@ public class UserService {
         esclient.delete(deleterequest, RequestOptions.DEFAULT);
     }
 
-// get all API
-    /**public String getAll() throws IOException {
-     if (USERS_INDEX_NAME.isEmpty()) {
-     throw new IllegalArgumentException("arguments can't be null");
-     }
-     GetRequest getRequest = new GetRequest(USERS_INDEX_NAME);
-     GetResponse getResponse = esclient.get(getRequest, RequestOptions.DEFAULT);
+    /**
+     * get all the documents from an index.
+     *
+     * @return List of all the users who have registered
+     * @throws IOException
+     */
+    public List<UserSearchResult> getAll() throws IOException{
+        SearchRequest searchRequest = new SearchRequest();
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
+        return getUserSearchResults(searchResponse);
+    }
 
-     return getResponse.getSourceAsString();
-     }*/
+    }
 
-}
+
+
+
