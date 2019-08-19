@@ -151,7 +151,16 @@ public class UserResource {
 
 	}
 
-	/** public Response getAllUser(){
+	/**
+	 * This API is used to list all the documents indexed in an index
+	 *
+	 * @return All the documents indexed
+	 */
+	 @GET
+	 @Produces(MediaType.APPLICATION_JSON)
+	 @Timed
+
+	 public Response getAllUser(){
 	 log.debug("Get record of all users");
 	 try {
 	 return Response.ok(userService.getAll()).build();
@@ -160,7 +169,7 @@ public class UserResource {
 	 return Response.serverError().build();
 	 }
 
-	 }*/
+	 }
 
 }
 
