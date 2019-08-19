@@ -3,33 +3,42 @@ package com.indore.api;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserProfile {
-	// Required fields
-    private String userId;                 //required
-
+    // Required fields
     @NotEmpty
-    private String address;                //required
-    private String currentCity;            //required
-    private String hometown;               //required
-    private String landmark;                //required
-    private String education;              //required
-    private String college;                 //required
-    private String aboutYou;                //required
-    private String professionalSkills;     //required
+    private String userId;
+    @NotEmpty
+    private String address;
+    @NotEmpty
+    private String currentCity;
+    @NotEmpty
+    private String hometown;
+    @NotEmpty
+    private String landmark;
+    @NotEmpty
+    private String pincode;
+    @NotEmpty
+    private String education;
+    @NotEmpty
+    private String college;
+    @NotEmpty
+    private String aboutYou;
+    @NotEmpty
+    private String professionalSkills;
 
-	// Optional fields.
-    private String pincode;                //optional
-    private String highSchool;             //optional
-    private String socialLink;              //optional
-    private String language;               //optional
-    private String otherNames;              //optional
-    private String hobbies;                 //optional
-    private String musicArtist;            //optional
-    private String bookAuthor;              //optional
-    private String programmes;              //optional
-    private String sportsTeam;              //optional
-    private String sportsPeople;            //optional
-    private String favouriteQuotes;         //optional
-    private String lifeEvents;              //optional
+    // Optional fields.
+
+    private String highSchool;
+    private String socialLink;
+    private String language;
+    private String otherNames;
+    private String hobbies;
+    private String musicArtist;
+    private String bookAuthor;
+    private String programmes;
+    private String sportsTeam;
+    private String sportsPeople;
+    private String favouriteQuotes;
+    private String lifeEvents;
     private long createdDate;
 
     public UserProfile() {
@@ -168,12 +177,13 @@ public class UserProfile {
         private final String currentCity;
         private final String hometown;
         private final String landmark;
+        private final String pincode;
         private final String education;
         private final String college;
         private final String aboutYou;
         private final String professionalSkills;
 
-        private String pincode;
+
         private String highSchool;
         private String socialLink;
         private String language;
@@ -188,23 +198,19 @@ public class UserProfile {
         private String lifeEvents;
         private long createdDate;
 
-        public UserProfileBuilder(String userId, String address, String currentCity, String hometown, String landmark, String education, String college, String aboutYou, String professionalSkills) {
+        public UserProfileBuilder(String userId, String address, String currentCity, String hometown, String landmark, String education, String college, String aboutYou, String professionalSkills, String pincode) {
             this.userId = userId;
             this.address = address;
             this.currentCity = currentCity;
             this.hometown = hometown;
             this.landmark = landmark;
+            this.pincode = pincode;
             this.education = education;
             this.college = college;
             this.aboutYou = aboutYou;
             this.professionalSkills = professionalSkills;
-        }
 
-        public UserProfileBuilder pincode(String pincode) {
-            this.pincode = pincode;
-            return this;
         }
-
 
         public UserProfileBuilder highSchool(String highSchool) {
             this.highSchool = highSchool;

@@ -4,6 +4,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.google.common.base.MoreObjects;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 /**
  * User registration API.
  *
@@ -19,7 +23,7 @@ public class UserRegistration {
 	private String lastName;
 	@NotEmpty
 	private String emailId;
-	
+
 	private long mobileNumber;
 	@NotEmpty
 	private String password;
