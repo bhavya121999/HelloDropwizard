@@ -1,29 +1,29 @@
 package com.indore.api;
 
 public class UserProfile {
-    private  String userId ;                 //required
-    private   String address;                //required
-    private   String currentCity;            //required
-    private   String hometown;               //required
-    private  String landmark;                //required
-    private   String education;              //required
-    private  String college;                 //required
-    private  String aboutYou;                //required
-    private   String professionalSkills;     //required
-    private   String pincode;                //optional
-    private   String highSchool;             //optional
-    private  String socialLink;              //optional
-    private   String language;               //optional
-    private  String otherNames;              //optional
-    private  String hobbies;                 //optional
-    private   String musicArtist;            //optional
-    private  String bookAuthor;              //optional
-    private  String programmes;              //optional
-    private  String sportsTeam;              //optional
-    private  String sportsPeople;            //optional
-    private  String favouriteQuotes;         //optional
-    private  String lifeEvents;              //optional
-    private  long createdDate;
+    private String userId;                 //required
+    private String address;                //required
+    private String currentCity;            //required
+    private String hometown;               //required
+    private String landmark;                //required
+    private String education;              //required
+    private String college;                 //required
+    private String aboutYou;                //required
+    private String professionalSkills;     //required
+    private String pincode;                //optional
+    private String highSchool;             //optional
+    private String socialLink;              //optional
+    private String language;               //optional
+    private String otherNames;              //optional
+    private String hobbies;                 //optional
+    private String musicArtist;            //optional
+    private String bookAuthor;              //optional
+    private String programmes;              //optional
+    private String sportsTeam;              //optional
+    private String sportsPeople;            //optional
+    private String favouriteQuotes;         //optional
+    private String lifeEvents;              //optional
+    private long createdDate;
 
     public UserProfile() {
     }
@@ -42,15 +42,15 @@ public class UserProfile {
         this.language = builder.language;
         this.aboutYou = builder.aboutYou;
         this.otherNames = builder.otherNames;
-        this.hobbies =builder. hobbies;
-        this.professionalSkills =builder. professionalSkills;
+        this.hobbies = builder.hobbies;
+        this.professionalSkills = builder.professionalSkills;
         this.musicArtist = builder.musicArtist;
         this.bookAuthor = builder.bookAuthor;
         this.programmes = builder.programmes;
         this.sportsTeam = builder.sportsTeam;
         this.sportsPeople = builder.sportsPeople;
         this.favouriteQuotes = builder.favouriteQuotes;
-        this.lifeEvents =builder. lifeEvents;
+        this.lifeEvents = builder.lifeEvents;
         this.createdDate = builder.createdDate;
     }
 
@@ -157,28 +157,28 @@ public class UserProfile {
 
     public static class UserProfileBuilder {
         private final String userId;
-        private  final String address;
-        private  final String currentCity;
-        private final  String hometown;
-        private  final String landmark;
+        private final String address;
+        private final String currentCity;
+        private final String hometown;
+        private final String landmark;
         private final String education;
-        private  final String college;
+        private final String college;
         private final String aboutYou;
-        private  final String professionalSkills;
-        private  String pincode;
-        private  String highSchool;
-        private  String socialLink;
-        private  String language;
-        private  String otherNames;
-        private  String hobbies;
-        private  String musicArtist;
-        private  String bookAuthor;
-        private  String programmes;
-        private  String sportsTeam;
-        private  String sportsPeople;
-        private  String favouriteQuotes;
-        private  String lifeEvents;
-        private  long createdDate;
+        private final String professionalSkills;
+        private String pincode;
+        private String highSchool;
+        private String socialLink;
+        private String language;
+        private String otherNames;
+        private String hobbies;
+        private String musicArtist;
+        private String bookAuthor;
+        private String programmes;
+        private String sportsTeam;
+        private String sportsPeople;
+        private String favouriteQuotes;
+        private String lifeEvents;
+        private long createdDate;
 
         public UserProfileBuilder(String userId, String address, String currentCity, String hometown, String landmark, String education, String college, String aboutYou, String professionalSkills) {
             this.userId = userId;
@@ -206,7 +206,9 @@ public class UserProfile {
         public UserProfileBuilder socialLink(String socialLink) {
             this.socialLink = socialLink;
             return this;
-        } public UserProfileBuilder language(String language) {
+        }
+
+        public UserProfileBuilder language(String language) {
             this.language = language;
             return this;
         }
@@ -215,47 +217,58 @@ public class UserProfile {
             this.otherNames = otherNames;
             return this;
         }
+
         public UserProfileBuilder hobbies(String hobbies) {
             this.hobbies = hobbies;
             return this;
         }
+
         public UserProfileBuilder musicArtist(String musicArtist) {
             this.musicArtist = musicArtist;
             return this;
         }
+
         public UserProfileBuilder bookAuthor(String bookAuthor) {
             this.bookAuthor = bookAuthor;
             return this;
         }
+
         public UserProfileBuilder programmes(String programmes) {
             this.programmes = programmes;
             return this;
         }
+
         public UserProfileBuilder sportsTeam(String sportsTeam) {
             this.sportsTeam = sportsTeam;
             return this;
         }
+
         public UserProfileBuilder sportsPeople(String sportsPeople) {
             this.sportsPeople = sportsPeople;
             return this;
         }
+
         public UserProfileBuilder favouriteQuotes(String favouriteQuotes) {
             this.favouriteQuotes = favouriteQuotes;
             return this;
         }
+
         public UserProfileBuilder lifeEvents(String lifeEvents) {
             this.lifeEvents = lifeEvents;
             return this;
         }
+
         public UserProfileBuilder createdDate(long createdDate) {
             this.createdDate = createdDate;
             return this;
         }
+
         public UserProfile build() {
-            UserProfile user =  new UserProfile(this);
+            UserProfile user = new UserProfile(this);
             validateUserObject(user);
             return user;
         }
+
         private void validateUserObject(UserProfile user) {
 
         }
