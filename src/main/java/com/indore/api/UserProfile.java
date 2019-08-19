@@ -6,16 +6,16 @@ public class UserProfile {
     private   String currentCity;            //required
     private   String hometown;               //required
     private  String landmark;                //required
-    private   String pincode;                //optional
     private   String education;              //required
-    private   String highSchool;             //optional
     private  String college;                 //required
+    private  String aboutYou;                //required
+    private   String professionalSkills;     //required
+    private   String pincode;                //optional
+    private   String highSchool;             //optional
     private  String socialLink;              //optional
     private   String language;               //optional
-    private  String aboutYou;                //required
     private  String otherNames;              //optional
     private  String hobbies;                 //optional
-    private   String professionalSkills;     //required
     private   String musicArtist;            //optional
     private  String bookAuthor;              //optional
     private  String programmes;              //optional
@@ -161,16 +161,16 @@ public class UserProfile {
         private  final String currentCity;
         private final  String hometown;
         private  final String landmark;
-        private  String pincode;
         private final String education;
-        private  String highSchool;
         private  final String college;
+        private final String aboutYou;
+        private  final String professionalSkills;
+        private  String pincode;
+        private  String highSchool;
         private  String socialLink;
         private  String language;
-        private final String aboutYou;
         private  String otherNames;
         private  String hobbies;
-        private  final String professionalSkills;
         private  String musicArtist;
         private  String bookAuthor;
         private  String programmes;
