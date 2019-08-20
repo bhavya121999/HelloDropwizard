@@ -76,4 +76,18 @@ public class UsersProfileResource {
             return Response.serverError().build();
         }
     }
+
+    /**
+     * This API is used to list all the documents of users profile.
+     *
+     * @return All the documents indexed
+     */
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Timed
+    public Response getAllUser() throws IOException {
+        log.debug("Get profile of all users");
+        return Response.ok(usersProfileService.getAll()).build();
+    }
 }

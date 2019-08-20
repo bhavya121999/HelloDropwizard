@@ -47,7 +47,7 @@ public class UserResource {
 			log.debug("User registration doc is {}", userRegistration.toString());
 			boolean userCreated = userRegisterationService.register(userRegistration);
 			if (userCreated) {
-				return Response.ok("user with id: " + userRegistration.getUserId() + "created successfully").build();
+				return Response.ok("user with id: " + userRegistration.getUserId()  +  " created successfully").build();
 			} else {
 				return Response.ok("User already exist").build();
 			}
