@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.indore.api.UserprofileSearchResult;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -119,73 +118,6 @@ public class UsersProfileService {
         GetRequest getRequest = new GetRequest(USERS_PROFILE_INDEX_NAME, id);
         GetResponse getResponse = esClient.get(getRequest, RequestOptions.DEFAULT);
         return getResponse.getSourceAsString();
-    }
-
-    /**
-     * get all the documents of users profile from an index.
-     *
-     * @return List of all the documents of users profile.
-     * @throws IOException
-     */
-    public List<UserprofileSearchResult> getAll() throws IOException {
-        SearchRequest searchRequest = new SearchRequest();
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esClient.search(searchRequest, RequestOptions.DEFAULT);
-        return getUserprofileSearchResults(searchResponse);
-    }
-
-    private List<UserprofileSearchResult> getUserprofileSearchResults(SearchResponse searchResponse) {
-        RestStatus status = searchResponse.status();
-        TimeValue took = searchResponse.getTook();
-        Boolean terminatedEarly = searchResponse.isTerminatedEarly();
-        boolean timedOut = searchResponse.isTimedOut();
-
-        // Start fetching the documents matching the search results.
-        //https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search
-        // .html#java-rest-high-search-response-search-hits
-        SearchHits hits = searchResponse.getHits();
-        SearchHit[] searchHits = hits.getHits();
-        List<UserprofileSearchResult> userprofileSearchResults = new ArrayList<>();
-        for (SearchHit hit : searchHits) {
-            // do something with the SearchHit
-            String index = hit.getIndex();
-            String id = hit.getId();
-            float score = hit.getScore();
-
-            //String sourceAsString = hit.getSourceAsString();
-            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-            String userId = (String) sourceAsMap.get("userId");
-            String address = (String) sourceAsMap.get("address");
-            String city = (String) sourceAsMap.get("city");
-            String hometown = (String) sourceAsMap.get("hometown");
-            String landmark = (String) sourceAsMap.get("landmark");
-            String education = (String) sourceAsMap.get("education");
-            String highSchool = (String) sourceAsMap.get("highSchool");
-            String college = (String) sourceAsMap.get("college");
-            String socialLink = (String) sourceAsMap.get("socialLink");
-            String language = (String) sourceAsMap.get("language");
-            String aboutYou = (String) sourceAsMap.get("aboutYou");
-            String otherNames = (String) sourceAsMap.get("otherNames");
-            String hobbies = (String) sourceAsMap.get("hobbies");
-            String professionalSkills = (String) sourceAsMap.get("professionalSkills");
-            String musicArtist = (String) sourceAsMap.get("musicArtist");
-            String bookAuthor = (String) sourceAsMap.get("bookAuthor");
-            String programmes = (String) sourceAsMap.get("programmes");
-            String sportsTeam = (String) sourceAsMap.get("sportsTeam");
-            String sportsPeople = (String) sourceAsMap.get("sportsPeople");
-            String favouriteQuotes = (String) sourceAsMap.get("favouriteQuotes");
-            String lifeEvents = (String) sourceAsMap.get("lifeEvents");
-
-            UserprofileSearchResult userprofileSearchResult = new UserprofileSearchResult(userId, address, city, hometown,
-                    landmark, education, highSchool, college, socialLink, language, aboutYou,
-                     otherNames, hobbies, professionalSkills, musicArtist, bookAuthor, programmes,
-                    sportsTeam, sportsPeople, favouriteQuotes, lifeEvents, score);
-            userprofileSearchResults.add(userprofileSearchResult);
-        }
-
-        return userprofileSearchResults;
     }
 }
 
