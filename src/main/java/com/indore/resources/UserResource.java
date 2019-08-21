@@ -43,7 +43,7 @@ public class UserResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public javax.ws.rs.core.Response createUser(@Valid UserRegistration userRegistration) {
+	public Response createUser(@Valid UserRegistration userRegistration) {
 		try {
 			log.debug("User registration doc is {}", userRegistration.toString());
 			boolean userCreated = userRegisterationService.register(userRegistration);
@@ -62,7 +62,7 @@ public class UserResource {
 			}
 		} catch (Exception e) {
 			log.error("Error indexing doc {} and error is", userRegistration, e);
-			return javax.ws.rs.core.Response.serverError().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -76,14 +76,14 @@ public class UserResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public javax.ws.rs.core.Response getUser(@PathParam("id") @NotEmpty String id) {
+	public Response getUser(@PathParam("id") @NotEmpty String id) {
 		log.debug("Get request for user id {}", id);
 		try {
 
-			return javax.ws.rs.core.Response.ok(userRegisterationService.get(id)).build();
+			return Response.ok(userRegisterationService.get(id)).build();
 		} catch (IOException e) {
 			log.error("Error getting user doc {} and error is {}", id, e);
-			return javax.ws.rs.core.Response.serverError().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -97,13 +97,13 @@ public class UserResource {
 	@POST
 	@Path("/search")
 	@Timed
-	public javax.ws.rs.core.Response searchUsers(SearchParameter searchParameter) {
+	public Response searchUsers(SearchParameter searchParameter) {
 		log.debug("Search term {}", searchParameter.getSearchTerm());
 		try {
-			return javax.ws.rs.core.Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
+			return Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
 		} catch (IOException e) {
 			log.error("Error getting search results for search term {} ", searchParameter.getSearchTerm(), e);
-			return javax.ws.rs.core.Response.serverError().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -118,14 +118,14 @@ public class UserResource {
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public javax.ws.rs.core.Response deleteUser(@PathParam("userId") String userId) {
+	public Response deleteUser(@PathParam("userId") String userId) {
 		log.debug("Delete request for message id {}", userId);
 		try {
 			userRegisterationService.delete(userId);
-			return javax.ws.rs.core.Response.ok().build();
+			return Response.ok().build();
 		} catch (IOException e) {
 			log.error("Error deleting user document {} and error is {}", userId, e);
-			return javax.ws.rs.core.Response.serverError().build();
+			return Response.serverError().build();
 		}
 	}
 
@@ -171,13 +171,13 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public javax.ws.rs.core.Response getAllUser() {
+	public Response getAllUser() {
 		log.debug("Get record of all users");
 		try {
-			return javax.ws.rs.core.Response.ok(userRegisterationService.getAll()).build();
+			return Response.ok(userRegisterationService.getAll()).build();
 		} catch (IOException e) {
 			log.error("Error getting user doc and error is {}", e);
-			return javax.ws.rs.core.Response.serverError().build();
+			return Response.serverError().build();
 		}
 	}
 
