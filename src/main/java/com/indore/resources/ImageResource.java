@@ -41,12 +41,9 @@ public class ImageResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/upload/{id}")
     public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) throws IOException {
-        String uploadedFileLocation = "";
-        String location = "../../";
         java.nio.file.Path tempDir = Files.createTempDirectory("testDir");
         java.nio.file.Path tempFile = Files.createTempFile(tempDir, id.trim(), fileType);
         try {
-            uploadedFileLocation = id.trim() + "." + fileType;
             writeToFile(inputStream, tempFile.toString());
             //TODO: Need to create a unique file name and look into file type.
             imageService.uploadFile(tempFile.toString(), id.trim(), ".jpeg");
