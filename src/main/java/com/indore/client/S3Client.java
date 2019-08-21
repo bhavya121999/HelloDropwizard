@@ -33,12 +33,10 @@ public class S3Client {
     }
 
     public void uploadFileToS3(String uploadedFileLocation, String fileName, String fileType) {
-        if (s3client.doesBucketExistV2(bucketname)) {
+        if(!s3client.doesBucketExist(bucketname)) {
             log.error("Bucket name is not available. Try again with a different Bucket name.");
-            return;
+            s3client.createBucket(bucketname);
         }
-
-        s3client.createBucket(bucketname);
 
         // Uploading Objects
         s3client.putObject(bucketname, fileName + fileType, new File(uploadedFileLocation));

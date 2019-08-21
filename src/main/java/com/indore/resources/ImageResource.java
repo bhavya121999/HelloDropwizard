@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -39,18 +40,20 @@ public class ImageResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/upload/{id}")
-    public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) {
+    public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) throws IOException {
         String uploadedFileLocation = "";
-        String location = "/home/bhavya/Desktop/";
+        String location = "../../";
+        java.nio.file.Path tempDir = Files.createTempDirectory("testDir");
+        java.nio.file.Path tempFile = Files.createTempFile(tempDir, id.trim(), fileType);
         try {
-            uploadedFileLocation = location + id.trim() + "." + fileType;
-            writeToFile(inputStream, uploadedFileLocation);
+            uploadedFileLocation = id.trim() + "." + fileType;
+            writeToFile(inputStream, tempFile.toString());
             //TODO: Need to create a unique file name and look into file type.
-            imageService.uploadFile(uploadedFileLocation, "demo", ".jpeg");
+            imageService.uploadFile(tempFile.toString(), id.trim(), ".jpeg");
         } catch (Exception e) {
             log.error(e.toString());
         } finally {
-            File file = new File(uploadedFileLocation);
+            File file = new File(tempDir.toString());
             if (file.exists())
                 file.delete();
         }
