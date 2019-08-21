@@ -31,6 +31,7 @@ public class ImageResource {
     private static final Logger log = LoggerFactory.getLogger(ImageResource.class);
 
     private final ImageService imageService;
+
     public ImageResource(ImageService imageService) {
         this.imageService = imageService;
     }
@@ -38,21 +39,19 @@ public class ImageResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/upload/{id}")
-    public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream,  @FormDataParam("type") final String fileType) {
-       String uploadedFileLocation="";
-       String location="/home/bhavya/Desktop/";
-        try{
+    public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) {
+        String uploadedFileLocation = "";
+        String location = "/home/bhavya/Desktop/";
+        try {
             uploadedFileLocation = location + id.trim() + "." + fileType;
             writeToFile(inputStream, uploadedFileLocation);
             //TODO: Need to create a unique file name and look into file type.
             imageService.uploadFile(uploadedFileLocation, "demo", ".jpeg");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             log.error(e.toString());
-        }
-        finally {
-            File file=new File(uploadedFileLocation);
-            if(file.exists())
+        } finally {
+            File file = new File(uploadedFileLocation);
+            if (file.exists())
                 file.delete();
         }
         return Response.ok().build();
@@ -79,4 +78,5 @@ public class ImageResource {
         }
 
 
-    }}
+    }
+}

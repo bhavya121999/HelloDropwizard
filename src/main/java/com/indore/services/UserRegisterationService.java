@@ -42,45 +42,45 @@ import com.indore.client.ElasticsearchClient;
 public class UserRegisterationService {
     private static final Logger log = LoggerFactory.getLogger(UserRegisterationService.class);
 
-	private final ElasticsearchClient esclient;
-	private final String EMAIL_ID = "emailId";
-	private final String USER_ID = "userId";
-	private final String MOBILE_NUMBER = "mobileNumber";
+    private final ElasticsearchClient esclient;
+    private final String EMAIL_ID = "emailId";
+    private final String USER_ID = "userId";
+    private final String MOBILE_NUMBER = "mobileNumber";
 
     public UserRegisterationService(ElasticsearchClient esclient) {
         this.esclient = esclient;
     }
 
-	/**
-	 * Add user document to its index.
-	 *
-	 * @param userRegistration user document is JSON format. Cannot be {@code null}.
-	 */
-	public boolean register(UserRegistration userRegistration) throws IOException {
-		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
-			return false;
-		}
+    /**
+     * Add user document to its index.
+     *
+     * @param userRegistration user document is JSON format. Cannot be {@code null}.
+     */
+    public boolean register(UserRegistration userRegistration) throws IOException {
+        if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
+            return false;
+        }
 
-		userRegistration.setCreatedDate(System.currentTimeMillis());
-		ObjectMapper Obj = new ObjectMapper();
-		final String userStr = Obj.writeValueAsString(userRegistration);
+        userRegistration.setCreatedDate(System.currentTimeMillis());
+        ObjectMapper Obj = new ObjectMapper();
+        final String userStr = Obj.writeValueAsString(userRegistration);
         final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
                 .id(userRegistration.getUserId())
                 .source(userStr, XContentType.JSON);
         IndexResponse indexResponse = esclient.index(indexRequest, RequestOptions.DEFAULT);
-		return true;
+        return true;
     }
 
-	private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
-		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-		boolQueryBuilder.minimumShouldMatch(1);
-		MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
-		MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
-		MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
-		boolQueryBuilder.should(emailMatchQueryBuilder);
-		boolQueryBuilder.should(userIdMatchQueryBuilder);
-		boolQueryBuilder.should(mobileMatchQueryBuilder);
+    private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
+        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        boolQueryBuilder.minimumShouldMatch(1);
+        MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+        MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
+        MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+        boolQueryBuilder.should(emailMatchQueryBuilder);
+        boolQueryBuilder.should(userIdMatchQueryBuilder);
+        boolQueryBuilder.should(mobileMatchQueryBuilder);
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(boolQueryBuilder);
@@ -180,7 +180,7 @@ public class UserRegisterationService {
 
     }
 
-   private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
+    private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
         // TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
         RestStatus status = searchResponse.status();
         TimeValue took = searchResponse.getTook();
@@ -231,7 +231,7 @@ public class UserRegisterationService {
      * @return List of all the users who have registered
      * @throws IOException
      */
-    public List<UserSearchResult> getAll() throws IOException{
+    public List<UserSearchResult> getAll() throws IOException {
         SearchRequest searchRequest = new SearchRequest();
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
@@ -240,7 +240,7 @@ public class UserRegisterationService {
         return getUserSearchResults(searchResponse);
     }
 
-    }
+}
 
 
 

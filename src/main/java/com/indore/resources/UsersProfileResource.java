@@ -46,7 +46,7 @@ public class UsersProfileResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
-    public Response createUserProfile(@Valid  UserProfile userProfile) {
+    public Response createUserProfile(@Valid UserProfile userProfile) {
         JSONResponse response = new JSONResponse();
         try {
             log.debug("User profile doc is {}", userProfile);
