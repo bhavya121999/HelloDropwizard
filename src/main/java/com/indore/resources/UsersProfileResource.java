@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.indore.utils.JSONResponse;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +47,16 @@ public class UsersProfileResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
     public Response createUserProfile(@Valid  UserProfile userProfile) {
+        JSONResponse response = new JSONResponse();
         try {
             log.debug("User profile doc is {}", userProfile);
             usersProfileService.add(userProfile);
-            return Response.ok().build();
+            response.setStatusCode(Response.Status.OK.getStatusCode());
+            return Response.ok(response).build();
         } catch (Exception e) {
             log.error("Error indexing profile doc {} and error is", userProfile, e);
-            return Response.serverError().build();
+            response.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            return Response.ok(response).build();
         }
 
     }

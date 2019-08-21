@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.indore.utils.JSONResponse;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,18 +43,26 @@ public class UserResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response createUser(@Valid UserRegistration userRegistration) {
+	public javax.ws.rs.core.Response createUser(@Valid UserRegistration userRegistration) {
 		try {
 			log.debug("User registration doc is {}", userRegistration.toString());
 			boolean userCreated = userRegisterationService.register(userRegistration);
+			JSONResponse response = new JSONResponse();
 			if (userCreated) {
-				return Response.ok("user with id: " + userRegistration.getUserId()  +  " created successfully").build();
+				//return javax.ws.rs.core.Response.ok("user with id: " + userRegistration.getUserId() + "created successfully").build();
+				response.setStatusCode(Response.Status.OK.getStatusCode());
+				response.setMsg("user with id: " + userRegistration.getUserId() + "created successfully");
+				return Response.ok(response).build();
+
 			} else {
-				return Response.ok("User already exist").build();
+				//return javax.ws.rs.core.Response.ok("User already exist").build();
+				response.setStatusCode(Response.Status.OK.getStatusCode());
+				response.setMsg("User already exist");
+				return Response.ok(response).build();
 			}
 		} catch (Exception e) {
 			log.error("Error indexing doc {} and error is", userRegistration, e);
-			return Response.serverError().build();
+			return javax.ws.rs.core.Response.serverError().build();
 		}
 	}
 
@@ -67,13 +76,14 @@ public class UserResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response getUser(@PathParam("id") @NotEmpty String id) {
+	public javax.ws.rs.core.Response getUser(@PathParam("id") @NotEmpty String id) {
 		log.debug("Get request for user id {}", id);
 		try {
-			return Response.ok(userRegisterationService.get(id)).build();
+
+			return javax.ws.rs.core.Response.ok(userRegisterationService.get(id)).build();
 		} catch (IOException e) {
 			log.error("Error getting user doc {} and error is {}", id, e);
-			return Response.serverError().build();
+			return javax.ws.rs.core.Response.serverError().build();
 		}
 	}
 
@@ -87,13 +97,13 @@ public class UserResource {
 	@POST
 	@Path("/search")
 	@Timed
-	public Response searchUsers(SearchParameter searchParameter) {
+	public javax.ws.rs.core.Response searchUsers(SearchParameter searchParameter) {
 		log.debug("Search term {}", searchParameter.getSearchTerm());
 		try {
-			return Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
+			return javax.ws.rs.core.Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
 		} catch (IOException e) {
 			log.error("Error getting search results for search term {} ", searchParameter.getSearchTerm(), e);
-			return Response.serverError().build();
+			return javax.ws.rs.core.Response.serverError().build();
 		}
 	}
 
@@ -108,14 +118,14 @@ public class UserResource {
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response deleteUser(@PathParam("userId") String userId) {
+	public javax.ws.rs.core.Response deleteUser(@PathParam("userId") String userId) {
 		log.debug("Delete request for message id {}", userId);
 		try {
 			userRegisterationService.delete(userId);
-			return Response.ok().build();
+			return javax.ws.rs.core.Response.ok().build();
 		} catch (IOException e) {
 			log.error("Error deleting user document {} and error is {}", userId, e);
-			return Response.serverError().build();
+			return javax.ws.rs.core.Response.serverError().build();
 		}
 	}
 
@@ -131,24 +141,26 @@ public class UserResource {
 	@GET
 	@Path("/auth/password/{password}")
 	public Response authUser(@PathParam("password") String password, @QueryParam("emailId") String emailId,
-			@QueryParam("mobileNumber") Long mobileNumber) throws IOException {
-		String testeMAIL = emailId;
-		Long mbl = mobileNumber;
-		String pass = password;
-		log.debug("Authenticate request for user");
+							 @QueryParam("mobileNumber") Long mobileNumber) throws IOException {
+		JSONResponse response = new JSONResponse();
 		try {
 			if (userRegisterationService.authUser(emailId, mobileNumber, password)) {
-				return Response.ok().build();
+				response.setStatusCode(Response.Status.OK.getStatusCode());
+				//return json;
+				//return Response.ok("Login suucessfull", MediaType.APPLICATION_JSON).build();
+				return Response.ok(response).build();
 			} else {
-				return Response.noContent().build();
+				response.setStatusCode(Response.Status.NOT_FOUND.getStatusCode());
+				return Response.ok(response).build();
 				//TODO: Need to correct this later so as to show this user is not present.
 			}
 
 		} catch (IOException e) {
-			log.error("User does not exist and error is {}", e);
-			return Response.serverError().build();
+			response.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			return Response.ok(response).build();
+			//log.error("User does not exist and error is {}", e);
+			//return Response.serverError().build();
 		}
-
 	}
 
 	/**
@@ -159,13 +171,13 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed
-	public Response getAllUser() {
+	public javax.ws.rs.core.Response getAllUser() {
 		log.debug("Get record of all users");
 		try {
-			return Response.ok(userRegisterationService.getAll()).build();
+			return javax.ws.rs.core.Response.ok(userRegisterationService.getAll()).build();
 		} catch (IOException e) {
 			log.error("Error getting user doc and error is {}", e);
-			return Response.serverError().build();
+			return javax.ws.rs.core.Response.serverError().build();
 		}
 	}
 
