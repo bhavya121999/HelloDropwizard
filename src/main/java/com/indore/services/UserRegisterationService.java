@@ -40,205 +40,202 @@ import com.indore.client.ElasticsearchClient;
  * @author Amit Khandelwal
  */
 public class UserRegisterationService {
-    private static final Logger log = LoggerFactory.getLogger(UserRegisterationService.class);
+	private static final Logger log = LoggerFactory.getLogger(UserRegisterationService.class);
 
-    private final ElasticsearchClient esclient;
-    private final String EMAIL_ID = "emailId";
-    private final String USER_ID = "userId";
-    private final String MOBILE_NUMBER = "mobileNumber";
+	private final ElasticsearchClient esclient;
+	private final String EMAIL_ID = "emailId";
+	private final String USER_ID = "userId";
+	private final String MOBILE_NUMBER = "mobileNumber";
 
-    public UserRegisterationService(ElasticsearchClient esclient) {
-        this.esclient = esclient;
-    }
+	public UserRegisterationService(ElasticsearchClient esclient) {
+		this.esclient = esclient;
+	}
 
-    /**
-     * Add user document to its index.
-     *
-     * @param userRegistration user document is JSON format. Cannot be {@code null}.
-     */
-    public boolean register(UserRegistration userRegistration) throws IOException {
-        if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(), userRegistration.getMobileNumber())) {
-            return false;
-        }
+	/**
+	 * Add user document to its index.
+	 *
+	 * @param userRegistration user document is JSON format. Cannot be {@code null}.
+	 */
+	public boolean register(UserRegistration userRegistration) throws IOException {
+		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(),
+				userRegistration.getMobileNumber())) {
+			return false;
+		}
 
-        userRegistration.setCreatedDate(System.currentTimeMillis());
-        ObjectMapper Obj = new ObjectMapper();
-        final String userStr = Obj.writeValueAsString(userRegistration);
-        final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
-                .id(userRegistration.getUserId())
-                .source(userStr, XContentType.JSON);
-        IndexResponse indexResponse = esclient.index(indexRequest, RequestOptions.DEFAULT);
-        return true;
-    }
+		userRegistration.setCreatedDate(System.currentTimeMillis());
+		ObjectMapper Obj = new ObjectMapper();
+		final String userStr = Obj.writeValueAsString(userRegistration);
+		final IndexRequest indexRequest = new IndexRequest(USERS_INDEX_NAME)
+				.id(userRegistration.getUserId())
+				.source(userStr, XContentType.JSON);
+		IndexResponse indexResponse = esclient.index(indexRequest, RequestOptions.DEFAULT);
+		return true;
+	}
 
-    private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.minimumShouldMatch(1);
-        MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
-        MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
-        MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
-        boolQueryBuilder.should(emailMatchQueryBuilder);
-        boolQueryBuilder.should(userIdMatchQueryBuilder);
-        boolQueryBuilder.should(mobileMatchQueryBuilder);
+	private boolean isUserExist(String email, String userId, Long mobile) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+		boolQueryBuilder.minimumShouldMatch(1);
+		MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+		MatchQueryBuilder userIdMatchQueryBuilder = new MatchQueryBuilder("userId", userId);
+		MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+		boolQueryBuilder.should(emailMatchQueryBuilder);
+		boolQueryBuilder.should(userIdMatchQueryBuilder);
+		boolQueryBuilder.should(mobileMatchQueryBuilder);
 
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(boolQueryBuilder);
-        log.info("Search json {} for user exist", searchSourceBuilder.toString());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
-        List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
-        return (userSearchResults != null && userSearchResults.size() > 0);
-
-
-    }
-
-    /**
-     * @param emailId      unique emailId of the user.
-     * @param mobileNumber unique mobileNumber of the user.
-     * @param password     unique password of the user.
-     * @return if the user is authenticated or not.
-     * @throws IOException
-     */
-    public boolean authUser(String emailId,
-                            Long mobileNumber, String password) throws IOException {
-        /**String email = USERS_INDEX_NAME.get("emailId").asText();
-
-         long mobile = USERS_INDEX_NAME.get("mobileNumber").asLong();*/
-
-        if (isAuthenticate(emailId, mobileNumber, password)) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(boolQueryBuilder);
+		log.info("Search json {} for user exist", searchSourceBuilder.toString());
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
+		List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
+		return (userSearchResults != null && userSearchResults.size() > 0);
 
 
-    private boolean isAuthenticate(String email, Long mobile, String password) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
-        boolQueryBuilder.minimumShouldMatch(2);
-        if (email != null) {
-            MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
-            boolQueryBuilder.should(emailMatchQueryBuilder);
-        }
-        if (mobile != null) {
-            MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
-            boolQueryBuilder.should(mobileMatchQueryBuilder);
-        }
+	}
 
-        MatchQueryBuilder passwordMatchQueryBuilder = new MatchQueryBuilder("password", password);
-        boolQueryBuilder.should(passwordMatchQueryBuilder);
+	/**
+	 * @param emailId      unique emailId of the user.
+	 * @param mobileNumber unique mobileNumber of the user.
+	 * @param password     unique password of the user.
+	 * @return if the user is authenticated or not.
+	 * @throws IOException
+	 */
+	public boolean authUser(String emailId,
+			Long mobileNumber, String password) throws IOException {
+		if (isAuthenticate(emailId, mobileNumber, password)) {
+			return true;
+		} else {
+			return false;
+		}
 
-
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(boolQueryBuilder);
-        log.info("Search json {} for user exist", searchSourceBuilder.toString());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
-        List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
-        return (userSearchResults != null && userSearchResults.size() > 0);
+	}
 
 
-    }
+	private boolean isAuthenticate(String email, Long mobile, String password) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+		boolQueryBuilder.minimumShouldMatch(2);
+		if (email != null) {
+			MatchQueryBuilder emailMatchQueryBuilder = new MatchQueryBuilder("emailId", email);
+			boolQueryBuilder.should(emailMatchQueryBuilder);
+		}
+		if (mobile != null) {
+			MatchQueryBuilder mobileMatchQueryBuilder = new MatchQueryBuilder("mobileNumber", mobile);
+			boolQueryBuilder.should(mobileMatchQueryBuilder);
+		}
+
+		MatchQueryBuilder passwordMatchQueryBuilder = new MatchQueryBuilder("password", password);
+		boolQueryBuilder.should(passwordMatchQueryBuilder);
 
 
-    /**
-     * get a user document by its id from elasticsearch.
-     *
-     * @param id unique id of user document. Cannot be {@code null}.
-     * @return user document.
-     * @throws IOException
-     */
-    public String get(String id) throws IOException {
-        if (id.isEmpty()) {
-            throw new IllegalArgumentException("arguments can't be null");
-        }
-        GetRequest getRequest = new GetRequest(USERS_INDEX_NAME, id);
-        GetResponse getResponse = esclient.get(getRequest, RequestOptions.DEFAULT);
-        return getResponse.getSourceAsString();
-    }
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(boolQueryBuilder);
+		log.info("Search json {} for user exist", searchSourceBuilder.toString());
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
+		List<UserSearchResult> userSearchResults = getUserSearchResults(searchResponse);
+		return (userSearchResults != null && userSearchResults.size() > 0);
 
-    /**
-     * Search for a term in user index.
-     *
-     * @param searchTerm search term which needs to be searched.
-     * @return matching documents in user index.
-     * @throws IOException
-     */
-    public List<UserSearchResult> search(String searchTerm) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(searchTerm, "firstName", "lastName",
-                "password", "emailId", "userId", "mobileNumber");
-        multiMatchQueryBuilder.operator(Operator.AND);
-        searchSourceBuilder.query(multiMatchQueryBuilder);
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
-        return getUserSearchResults(searchResponse);
 
-    }
+	}
 
-    private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
-        // TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
-        RestStatus status = searchResponse.status();
-        TimeValue took = searchResponse.getTook();
-        Boolean terminatedEarly = searchResponse.isTerminatedEarly();
-        boolean timedOut = searchResponse.isTimedOut();
 
-        // Start fetching the documents matching the search results.
-        //https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search
-        // .html#java-rest-high-search-response-search-hits
-        SearchHits hits = searchResponse.getHits();
-        SearchHit[] searchHits = hits.getHits();
-        List<UserSearchResult> userSearchResults = new ArrayList<>();
-        for (SearchHit hit : searchHits) {
-            // do something with the SearchHit
-            String index = hit.getIndex();
-            String id = hit.getId();
-            float score = hit.getScore();
+	/**
+	 * get a user document by its id from elasticsearch.
+	 *
+	 * @param id unique id of user document. Cannot be {@code null}.
+	 * @return user document.
+	 * @throws IOException
+	 */
+	public String get(String id) throws IOException {
+		if (id.isEmpty()) {
+			throw new IllegalArgumentException("arguments can't be null");
+		}
+		GetRequest getRequest = new GetRequest(USERS_INDEX_NAME, id);
+		GetResponse getResponse = esclient.get(getRequest, RequestOptions.DEFAULT);
+		return getResponse.getSourceAsString();
+	}
 
-            //String sourceAsString = hit.getSourceAsString();
-            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-            String firstName = (String) sourceAsMap.get("firstName");
-            String lastName = (String) sourceAsMap.get("lastName");
-            String emailId = (String) sourceAsMap.get("emailId");
-            String userId = (String) sourceAsMap.get("userId");
+	/**
+	 * Search for a term in user index.
+	 *
+	 * @param searchTerm search term which needs to be searched.
+	 * @return matching documents in user index.
+	 * @throws IOException
+	 */
+	public List<UserSearchResult> search(String searchTerm) throws IOException {
+		SearchRequest searchRequest = new SearchRequest(USERS_INDEX_NAME);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(searchTerm, "firstName", "lastName",
+				"password", "emailId", "userId", "mobileNumber");
+		multiMatchQueryBuilder.operator(Operator.AND);
+		searchSourceBuilder.query(multiMatchQueryBuilder);
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
+		return getUserSearchResults(searchResponse);
 
-            UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, userId,
-                    score);
-            userSearchResults.add(userSearchResult);
-        }
+	}
 
-        return userSearchResults;
-    }
+	private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
+		// TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
+		RestStatus status = searchResponse.status();
+		TimeValue took = searchResponse.getTook();
+		Boolean terminatedEarly = searchResponse.isTerminatedEarly();
+		boolean timedOut = searchResponse.isTimedOut();
 
-    /**
-     * delete a user document by its id from elasticsearch.
-     *
-     * @param userId unique id of user document. Cannot be {@code null}.
-     * @throws IOException
-     */
-    public void delete(String userId) throws IOException {
-        final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, userId);
-        esclient.delete(deleterequest, RequestOptions.DEFAULT);
-    }
+		// Start fetching the documents matching the search results.
+		//https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search
+		// .html#java-rest-high-search-response-search-hits
+		SearchHits hits = searchResponse.getHits();
+		SearchHit[] searchHits = hits.getHits();
+		List<UserSearchResult> userSearchResults = new ArrayList<>();
+		for (SearchHit hit : searchHits) {
+			// do something with the SearchHit
+			String index = hit.getIndex();
+			String id = hit.getId();
+			float score = hit.getScore();
 
-    /**
-     * get all the documents from an index.
-     *
-     * @return List of all the users who have registered
-     * @throws IOException
-     */
-    public List<UserSearchResult> getAll() throws IOException {
-        SearchRequest searchRequest = new SearchRequest();
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
-        return getUserSearchResults(searchResponse);
-    }
+			//String sourceAsString = hit.getSourceAsString();
+			Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+			String firstName = (String) sourceAsMap.get("firstName");
+			String lastName = (String) sourceAsMap.get("lastName");
+			String emailId = (String) sourceAsMap.get("emailId");
+			String userId = (String) sourceAsMap.get("userId");
+
+			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, userId,
+					score);
+			userSearchResults.add(userSearchResult);
+		}
+
+		return userSearchResults;
+	}
+
+	/**
+	 * delete a user document by its id from elasticsearch.
+	 *
+	 * @param userId unique id of user document. Cannot be {@code null}.
+	 * @throws IOException
+	 */
+	public void delete(String userId) throws IOException {
+		final DeleteRequest deleterequest = new DeleteRequest(USERS_INDEX_NAME, userId);
+		esclient.delete(deleterequest, RequestOptions.DEFAULT);
+	}
+
+	/**
+	 * get all the documents from an index.
+	 *
+	 * @return List of all the users who have registered
+	 * @throws IOException
+	 */
+	public List<UserSearchResult> getAll() throws IOException {
+		SearchRequest searchRequest = new SearchRequest();
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = esclient.search(searchRequest, RequestOptions.DEFAULT);
+		return getUserSearchResults(searchResponse);
+	}
 
 }
 

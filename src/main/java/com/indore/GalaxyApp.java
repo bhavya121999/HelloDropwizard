@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 import com.indore.client.ElasticsearchClient;
 import com.indore.client.S3Client;
 import com.indore.config.GalaxyConfiguration;
+import com.indore.resources.AuthenticationResource;
 import com.indore.resources.ImageResource;
 import com.indore.resources.UserResource;
 import com.indore.resources.UsersProfileResource;
@@ -79,10 +80,12 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         UsersProfileService userProfileService = new UsersProfileService(elasticsearchClient);
         ImageService imageService = new ImageService(s3Client);
 
+
         // URL mapping
         environment.jersey().register(new UserResource(userRegisterationService));
         environment.jersey().register(new UsersProfileResource(userProfileService));
         environment.jersey().register(new ImageResource(imageService));
+        environment.jersey().register(new AuthenticationResource(userRegisterationService));
         environment.jersey().register(MultiPartFeature.class);
     }
 

@@ -10,11 +10,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.indore.utils.JSONResponse;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +21,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.indore.api.SearchParameter;
 import com.indore.api.UserRegistration;
 import com.indore.services.UserRegisterationService;
+import com.indore.utils.JSONResponse;
 
 /**
  * User resource to create an entity for indexing the document, search request, getting doc by id. .
@@ -129,39 +128,7 @@ public class UserResource {
         }
     }
 
-    /**
-     * This API is used to determine the authentication of the user based on emailId,mobileNumber and password.
-     *
-     * @param password     unique password of user document.Cannot be {@code null}.
-     * @param emailId      unique emailId of user document.
-     * @param mobileNumber unique mobileNumber of user document.
-     * @return user document
-     * @throws IOException
-     */
-    @GET
-    @Path("/auth/password/{password}")
-    public Response authUser(@PathParam("password") String password, @QueryParam("emailId") String emailId,
-                             @QueryParam("mobileNumber") Long mobileNumber) throws IOException {
-        JSONResponse response = new JSONResponse();
-        try {
-            if (userRegisterationService.authUser(emailId, mobileNumber, password)) {
-                response.setStatusCode(Response.Status.OK.getStatusCode());
-                //return json;
-                //return Response.ok("Login suucessfull", MediaType.APPLICATION_JSON).build();
-                return Response.ok(response).build();
-            } else {
-                response.setStatusCode(Response.Status.NOT_FOUND.getStatusCode());
-                return Response.ok(response).build();
-                //TODO: Need to correct this later so as to show this user is not present.
-            }
 
-        } catch (IOException e) {
-            response.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return Response.ok(response).build();
-            //log.error("User does not exist and error is {}", e);
-            //return Response.serverError().build();
-        }
-    }
 
     /**
      * This API is used to list all the documents indexed in an index
