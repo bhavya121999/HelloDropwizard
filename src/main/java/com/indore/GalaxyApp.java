@@ -18,7 +18,6 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.indore.client.ElasticsearchClient;
 import com.indore.client.S3Client;
@@ -108,10 +107,8 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     private void createIndex(RestHighLevelClient client) throws IOException, URISyntaxException {
         for (String indexName : INDICES) {
             if (!isIndexExist(client, indexName)) {
-                ObjectMapper objectMapper = new ObjectMapper();
                 JsonUtil jsonUtil = new JsonUtil();
-                String indexString = jsonUtil.getJson(indexName + ".mapping");
-                //String indexString = objectMapper.writeValueAsString(indexJson);
+                String indexString = jsonUtil.getStringFromFile(indexName + ".mapping");
                 CreateIndexRequest request = new CreateIndexRequest(indexName);
                 request.source(indexString, XContentType.JSON);
                 client.indices().create(request, RequestOptions.DEFAULT);
