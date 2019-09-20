@@ -203,8 +203,10 @@ public class UserRegisterationService {
 			String emailId = (String) sourceAsMap.get("emailId");
 			String userId = (String) sourceAsMap.get("userId");
 
-			UserSearchResult userSearchResult = new UserSearchResult(firstName, lastName, emailId, userId,
-					score);
+			UserSearchResult userSearchResult = (UserSearchResult) new UserSearchResult.Builder(score, userId, firstName, lastName)
+					.emailId(emailId).status(status)
+					.build();
+
 			userSearchResults.add(userSearchResult);
 		}
 

@@ -17,6 +17,8 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 import com.indore.client.ElasticsearchClient;
@@ -36,6 +38,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public class GalaxyApp extends Application<GalaxyConfiguration> {
+    private static final Logger log = LoggerFactory.getLogger(GalaxyApp.class);
 
     public static final String USERS_INDEX_NAME = "users";
     public static final String USERS_PROFILE_INDEX_NAME = "usersprofile";
@@ -53,7 +56,8 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<GalaxyConfiguration> bootstrap) {
-        // TODO: application initialization
+        log.info("Galaxy app initializing...........");
+
     }
 
     @Override
@@ -86,6 +90,8 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         environment.jersey().register(new ImageResource(imageService));
         environment.jersey().register(new AuthenticationResource(userRegisterationService));
         environment.jersey().register(MultiPartFeature.class);
+
+        log.info("Galaxy app started successfully.....");
     }
 
 

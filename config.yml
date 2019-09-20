@@ -1,21 +1,37 @@
 logging:
   level: INFO
   loggers:
-    com.indore: DEBUG
+    com.indore: INFO
+  appenders:
+    # Log warnings and errors to stderr
+    - type: console
+      threshold: INFO
+      target: stdout
+    - type: file
+      # The file to which current statements will be logged.
+      currentLogFilename: ./logs/galaxy.log
+      # When the log file rotates, the archived log will be renamed to this and gzipped. The
+      # %d is replaced with the previous day (yyyy-MM-dd). Custom rolling windows can be created
+      # by passing a SimpleDateFormat-compatible format as an argument: "%d{yyyy-MM-dd-hh}".
+      archivedLogFilenamePattern: ./logs/galaxy-%d.log.gz
+      # The number of archived files to keep.
+      archivedFileCount: 5
+      # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
+      timeZone: UTC
 server:
   applicationConnectors:
     - type: http
-      port: 9092
+      port: 9098
   adminConnectors:
     - type: http
-      port: 9093
+      port: 9099
 
 elasticsearchConfiguration:
   host: localhost
   port: 9500
 
 awsConfig:
-  accesskey:
-  secretaccesskey:
-  clientregion:
-  bucketname: 
+  accesskey: "aa"
+  secretaccesskey: "ss"
+  clientregion: "sdd"
+  bucketname: "dad"

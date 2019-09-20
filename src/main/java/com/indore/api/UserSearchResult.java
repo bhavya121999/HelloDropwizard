@@ -1,60 +1,72 @@
 package com.indore.api;
 
 /**
- * UserSearchResult to generate getters for User Resource.
- * getter is a method that reads value of a variable.
+ * UserSearchResult for a user search query.
  *
  * @author Amit Khandelwal
  */
-public final class UserSearchResult {
-    private final String firstName;
-    private final String lastName;
-    private final String emailId;
-    private final float score;
-    private final String userId;
+public final class UserSearchResult extends SearchResult {
+	private final String userId;
+	private final String firstName;
+	private final String lastName;
+	private final String emailId;
+	private final float score;
 
-    public UserSearchResult(String firstName, String lastName, String emailId, String userId, float score) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailId = emailId;
-        this.score = score;
-        this.userId = userId;
-    }
+	public UserSearchResult(Builder builder) {
+		super(builder);
+		this.userId = builder.userId;
+		this.firstName = builder.firstName;
+		this.lastName = builder.lastName;
+		this.emailId = builder.emailId;
+		this.score = builder.score;
+	}
 
-    /**
-     * @return FirstName of the user.
-     */
-    public String getFirstName() {
-        return firstName;
-    }
+	public static class Builder extends SearchResult.Builder<Builder> {
+		// Mandatory fields in user search results.
+		private final String userId;
+		private final String firstName;
+		private final String lastName;
+		private final float score;
 
-    /**
-     * @return LastName of the user.
-     */
+		// Optional fields
+		private String emailId;
 
-    public String getLastName() {
-        return lastName;
-    }
+		public Builder(float score, String userId, String firstName, String lastName) {
+			super(score);
+			this.userId = userId;
+			this.firstName = firstName;
+			this.lastName = lastName;
+			this.score = score;
+		}
 
-    /**
-     * @return Score of each document with a positive floating-point number known as the _score.
-     */
+		public Builder emailId(String emailId) {
+			this.emailId = emailId;
+			return this;
+		}
 
-    public float getScore() {
-        return score;
-    }
+		public UserSearchResult build() {
+			return new UserSearchResult(this);
+		}
+	}
 
-    /**
-     * @return emailId of the user.
-     */
-    public String getEmailId() {
-        return emailId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    /**
-     * @return userId of the user.
-     */
-    public String getUserId() {
-        return userId;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	@Override
+	public float getScore() {
+		return score;
+	}
 }

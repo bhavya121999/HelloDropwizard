@@ -39,7 +39,8 @@ public class ImageResource {
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/upload/{id}")
-	public Response imageUpload(@PathParam("id") @NotEmpty String id, @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) {
+	public Response imageUpload(@PathParam("id") @NotEmpty String id,
+			 @FormDataParam("file") final InputStream inputStream, @FormDataParam("type") final String fileType) {
 		String uploadedFileLocation = "";
 		String location = "/home/bhavya/Desktop/";
 		try {

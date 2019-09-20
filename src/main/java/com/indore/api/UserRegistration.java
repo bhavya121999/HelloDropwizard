@@ -1,6 +1,5 @@
 package com.indore.api;
 
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,7 +20,6 @@ public class UserRegistration {
 	private String lastName;
 	@NotEmpty
 	private String emailId;
-	@NotNull
 	private Long mobileNumber;
 	@NotEmpty
 	private String password;

@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
-import com.indore.api.SearchParameter;
+import com.indore.api.SearchParam;
 import com.indore.api.UserRegistration;
 import com.indore.services.UserRegisterationService;
 import com.indore.utils.JSONResponse;
@@ -89,19 +89,19 @@ public class UserResource {
     /**
      * This API allows to search user document based on search term.
      *
-     * @param searchParameter Parameters that can be included in the search term.
+     * @param searchParam Parameters that can be included in the search term.
      * @return user document corresponding to search term.
      */
 
     @POST
     @Path("/search")
     @Timed
-    public Response searchUsers(SearchParameter searchParameter) {
-        log.debug("Search term {}", searchParameter.getSearchTerm());
+    public Response searchUsers(SearchParam searchParam) {
+        log.debug("Search term {}", searchParam.getSearchTerm());
         try {
-            return Response.ok(userRegisterationService.search(searchParameter.getSearchTerm())).build();
+            return Response.ok(userRegisterationService.search(searchParam.getSearchTerm())).build();
         } catch (IOException e) {
-            log.error("Error getting search results for search term {} ", searchParameter.getSearchTerm(), e);
+            log.error("Error getting search results for search term {} ", searchParam.getSearchTerm(), e);
             return Response.serverError().build();
         }
     }

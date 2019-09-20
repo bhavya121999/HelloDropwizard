@@ -1,5 +1,6 @@
 package com.indore.config;
 
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**

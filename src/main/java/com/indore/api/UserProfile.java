@@ -1,6 +1,5 @@
 package com.indore.api;
 
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -16,7 +15,6 @@ public class UserProfile {
 	private String hometown;
 	@NotEmpty
 	private String landmark;
-	@NotNull
 	private Integer pincode;
 	@NotEmpty
 	private String education;
