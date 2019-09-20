@@ -3,12 +3,13 @@ package com.indore.api;
 import java.util.Set;
 
 /**
- * Base params for search.
+ * Base Abstract params for search.
+ * This class in't intended to be used directly hence making it abstract.
  *
  * @author Amit Khandelwal
  */
 
-public class SearchParam {
+public abstract class SearchParam {
 	protected final String searchTerm;
 	protected final Integer from;
 	protected final Integer size;
@@ -23,37 +24,35 @@ public class SearchParam {
     	this.returnFields = builder.returnFields;
 	}
 
-	public static class Builder<B extends Builder<B>> {
+	public static  abstract class Builder<B extends Builder<B>> {
     	// Mandatory fields
-		private final String searchTerm;
+		protected final String searchTerm;
 
 		// Optional fields with default values;
-		private Set<String> returnFields;
-		private Integer from=0;
-		private Integer size=20;
+		protected Set<String> returnFields;
+		protected Integer from=0;
+		protected Integer size=20;
 
 		public Builder(String searchTerm) {
 			this.searchTerm = searchTerm;
 		}
 
-		public Builder<B> from(Integer from){
+		public Builder<B> setFrom(Integer from){
 			this.from = from;
 			return this;
 		}
 
-		public Builder<B> size(Integer size){
+		public Builder<B> setSize(Integer size){
 			this.size = size;
 			return this;
 		}
 
-		public Builder<B> returnFields(Set<String> returnFields) {
+		public Builder<B> setReturnFields(Set<String> returnFields) {
 			this.returnFields = returnFields;
 			return this;
 		}
 
-		public SearchParam build(){
-			return new SearchParam(this);
-		}
+		public abstract SearchParam build();
 	}
 
 	public String getSearchTerm() {

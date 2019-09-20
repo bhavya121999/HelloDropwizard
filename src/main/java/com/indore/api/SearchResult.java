@@ -4,58 +4,56 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.rest.RestStatus;
 
 /**
- * Base search result.
+ * Base search results builder class.
  *
  * @author Amit Khandelwal
  */
-public class SearchResult {
+public abstract class SearchResult {
 	protected final float score;
 
-	public SearchResult(Builder builder){
+	public SearchResult(Builder builder) {
 		this.score = builder.score;
 	}
 
-	public static class Builder<B extends Builder<B>> {
-		private final float score;
+	public abstract static class Builder<B extends Builder<B>> {
+		protected final float score;
 		// optional field.
-		private long numberOfHits;
-		private RestStatus status;
-		private TimeValue took;
-		private Boolean terminatedEarly;
-		private boolean timedOut;
+		protected long numberOfHits;
+		protected RestStatus status;
+		protected TimeValue took;
+		protected Boolean terminatedEarly;
+		protected boolean timedOut;
 
 		public Builder(float score) {
 			this.score = score;
 		}
 
-		public Builder numberOfHits(long numberOfHits) {
+		public Builder setNumberOfHits(long numberOfHits) {
 			this.numberOfHits = numberOfHits;
 			return this;
 		}
 
-		public Builder status(RestStatus status) {
+		public Builder setStatus(RestStatus status) {
 			this.status = status;
 			return this;
 		}
 
-		public Builder took(TimeValue took) {
+		public Builder setTook(TimeValue took) {
 			this.took = took;
 			return this;
 		}
 
-		public Builder terminatedEarly(Boolean terminatedEarly) {
+		public Builder isTerminatedEarly(Boolean terminatedEarly) {
 			this.terminatedEarly = terminatedEarly;
 			return this;
 		}
 
-		public Builder timedOut(boolean timedOut) {
+		public Builder isTimedOut(boolean timedOut) {
 			this.timedOut = timedOut;
 			return this;
 		}
 
-		public SearchResult build(){
-			return new SearchResult(this);
-		}
+		public abstract SearchResult build();
 	}
 
 	public float getScore() {

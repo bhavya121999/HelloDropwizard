@@ -200,14 +200,15 @@ public class UserRegisterationService {
 			Map<String, Object> sourceAsMap = hit.getSourceAsMap();
 			String firstName = (String) sourceAsMap.get("firstName");
 			String lastName = (String) sourceAsMap.get("lastName");
+			// Marking this optional.
 			String emailId = (String) sourceAsMap.get("emailId");
 			String userId = (String) sourceAsMap.get("userId");
 
-			UserSearchResult userSearchResult = (UserSearchResult) new UserSearchResult.Builder(score, userId, firstName, lastName)
-					.emailId(emailId).status(status)
-					.build();
+			UserSearchResult.Builder userSearchResultBuilder = new UserSearchResult.Builder(score, userId, firstName,
+					lastName);
+			userSearchResultBuilder.isTimedOut(timedOut).isTerminatedEarly(terminatedEarly).setStatus(status);
 
-			userSearchResults.add(userSearchResult);
+			userSearchResults.add(userSearchResultBuilder.build());
 		}
 
 		return userSearchResults;

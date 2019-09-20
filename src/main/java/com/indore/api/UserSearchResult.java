@@ -44,6 +44,7 @@ public final class UserSearchResult extends SearchResult {
 			return this;
 		}
 
+		@Override
 		public UserSearchResult build() {
 			return new UserSearchResult(this);
 		}
