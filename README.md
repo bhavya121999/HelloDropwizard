@@ -5,6 +5,7 @@
 2. Maven: 3.6.0
 3. Dropwizard: 1.3
 4. Elasticsearch: 7.3
+5. Docker : 19.03.5
 
 
 
