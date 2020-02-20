@@ -86,9 +86,9 @@ body :-{<br />
 
    After hitting this API the document that matches the search parameter will be seen as a response.
    
-   #### Dockerize Dropwizard Application
+   ## Dockerize Dropwizard Application
    
-   1. Add the following maven shade plugin configuration.
+   1. Add the following **maven shade plugin** configuration.
    
    ```
   <!-- Maven Shade Plugin -->
