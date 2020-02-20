@@ -1,0 +1,120 @@
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {
+          "lowercaseFilter": {
+            "type": "lowercase"
+          }
+        },
+        "analyzer": {
+          "lcKeyword": {
+            "type": "custom",
+            "filter": [
+              "lowercaseFilter"
+            ],
+            "tokenizer": "keyword"
+          }
+        },
+        "tokenizer": {
+          "edgeNGramTokenizer": {
+            "token_chars": [
+              "letter",
+              "digit"
+            ],
+            "min_gram": "1",
+            "type": "edgeNGram",
+            "max_gram": "40"
+          },
+          "standard": {
+            "type": "standard",
+            "max_token_length": "255"
+          },
+          "loginNGram": {
+            "type": "nGram",
+            "min_gram": "3",
+            "max_gram": "50"
+          }
+        }
+      },
+      "number_of_shards": "1",
+      "number_of_replicas": "0",
+      "max_ngram_diff": "50"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "userId": {
+        "analyzer": "lcKeyword",
+        "type": "text"
+      },
+      "address": {
+        "type": "text"
+      },
+      "city": {
+        "type": "text"
+      },
+      "hometown": {
+        "type": "text"
+      },
+      "landmark": {
+        "type": "text"
+      },
+      "pincode": {
+        "type": "keyword"
+      },
+      "education": {
+        "type": "text"
+      },
+      "highSchool": {
+        "type": "text"
+      },
+      "college": {
+        "type": "text"
+      },
+      "socialLink": {
+        "type": "keyword"
+      },
+      "language": {
+        "type": "text"
+      },
+      "aboutYou": {
+        "type": "text"
+      },
+      "otherNames": {
+        "type": "text"
+      },
+      "hobbies": {
+        "type": "text"
+      },
+      "professionalSkills": {
+        "type": "text"
+      },
+      "musicArtist": {
+        "type": "text"
+      },
+      "bookAuthor": {
+        "type": "text"
+      },
+      "programmes": {
+        "type": "text"
+      },
+      "sportsTeam": {
+        "type": "text"
+      },
+      "sportsPeople": {
+        "type": "text"
+      },
+      "favouriteQuotes": {
+        "type": "text"
+      },
+      "lifeEvents": {
+        "type": "text"
+      },
+      "createdDate" : {
+        "type" : "date",
+        "format": "dd-MM-yyyy HH:mm:ss||dd-MM-yyyy||epoch_millis"
+      }
+    }
+  }
+}
