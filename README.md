@@ -84,4 +84,81 @@ body :-{<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
 
    After hitting this API the document that matches the search parameter will be seen as a response.
+   
+   #### Dockerize Dropwizard Application
+   
+   1. Add the following maven shade plugin configuration.
+   
+   ```
+  <!-- Maven Shade Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<!-- Run shade goal on package phase -->
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>org.apache.logging.log4j:log4j-api</exclude>
+									<exclude>org.apache.logging.log4j:log4j-core</exclude>
+								</excludes>
+							</artifactSet>
+							<transformers>
+								<transformer implementation=
+													 "org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+							</transformers>
 
+						</configuration>
+
+					</execution>
+				</executions>
+			</plugin>
+
+```
+2. After executing ```mvn package``` you will have the following directory structure.
+
+![z1](https://user-images.githubusercontent.com/46423346/74933477-06e07180-540a-11ea-8aa3-b90b50a9a418.png)
+
+3. Run your application using ```java -jar target/galaxy-1.0-SNAPSHOT.jar server <your-config>.yml```
+
+4. To dockerize your application, create a file named as ```Dockerfile``` and put it inside root of your project.
+5. Add the following code in the Dockerfile
+
+```
+FROM openjdk:12-alpine
+COPY target/galaxy-*.jar /galaxy.jar/
+CMD ["java" , "-jar" , "/galaxy.jar"]
+```
+6. Now, go to command terminal to build the image of the Dockerfile
+
+Run the following command:
+
+```sudo docker build -t marco/irock:1.0-SNAPSHOT .```
+
+
+***NOTE:  Image name is ```irock``` and you can even mention its version lets say ```1.0-SNAPSHOT```***
+
+![z2](https://user-images.githubusercontent.com/46423346/74934418-2f696b00-540c-11ea-8c94-fd10fe4aa4de.png)
+
+7. After executing the above command, your image is built.
+
+8. Now go back to your IDE and stop your application, because now you want to run it on the docker container.
+
+9. Go back to terminal, and run the following command
+
+```sudo docker run -d -p 9098:9098 marco/irock:1.0-SNAPSHOT```
+
+You will see that, you will get a docker container id.
+
+![2a](https://user-images.githubusercontent.com/46423346/74934685-c6362780-540c-11ea-96f4-7571fb921be5.png)
+   
+
+10. You can stop the docker container by running:
+
+```docker container stop <id>```
