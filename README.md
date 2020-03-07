@@ -32,59 +32,72 @@
 ## API Documentation
 To test the API , use any rest client like postman etc.
 
-#### Create a new index<br />
-For eg. users <br />
-This can be done as:<br />
-URL :-```http://{{hostname}}:9090/users```<br />
-header :- content-type :- application/json<br />
-method :- post<br />
-body :- {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "settings" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;     "number_of_shards" : 1<br />
-   &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;    },<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "mappings" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        "properties" : {<br />
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           "field1" : { "type" : "text" }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;        }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;     }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   }<br />  
+### Create a new index<br />
+
+`curl -XPOST 'http://{{hostname}}:9090/users' -H 'Content-Type: application/json' -d '`
+
+```
+        {
+         "settings" : {
+           "number_of_shards" : 1
+                 },
+        "mappings" : {
+            "properties" : {
+               "field1" : { "type" : "text" }
+                    }
+            }
+        }
+	```
   
+ 
   After hitting this API new index **users** must be created.      
   The settings and mappings definition can be taken directly from the project through ```users.mapping``` which is present 
   under the ```resources``` package. 
+```
 
-#### Index document<br /> 
-URL :- ```http://{{hostname}}:9090/users/{id}```<br />
-header :- content-type :- application/json<br />
-method :- post<br />
-body :- {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "user_id": "gupta121",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "firstName": "Bhavya",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "lastName": "Gupta",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "status": "true"<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    }<br />
+### Index Document <br />
+
+
+
+`curl -XPOST 'http://{{hostname}}:9090/users/{id}' -H 'Content-Type: application/json' -d '`
+
+```
+            {
+                "user_id": "gupta121",
+                "firstName": "Bhavya",
+                "lastName": "Gupta",
+                "status": "true"
+            }
+```
 
    After hitting this API user document will be created.
 
-#### Get document by id<br />
-URL :-```http://{{hostname}}:9200/users/_doc/{id}```<br />
-header :- content-type :- application/json<br />
-method :- get<br />
+### Get document by id<br />
+
+`curl -XGET 'http://{{hostname}}:9200/users/_doc/{id}' -H 'Content-Type: application/json' -d '`
+
+
    After hitting this api the document corresponding to the id specified in the URL will be obtained.
 
-#### Search Request<br />
-URL :-```http://{{hostname}}:9200/users/_search```<br />
-header :- content-type :- application/json<br />
-method :- get<br />
-body :-{<br />
-&nbsp;&nbsp;&nbsp;    "query": {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        "match" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           "status" : "true"<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        }<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   }<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+### Search Request<br />
 
+
+`curl -XGET 'http://{{hostname}}:9200/users/_search' -H 'Content-Type: application/json' -d '`
+
+
+ ``` {
+    "query": {
+      "match" : {
+        "status" : "true"
+                }
+               }
+             }
+	     
+	     ```
+
+```
    After hitting this API the document that matches the search parameter will be seen as a response.
+   
    
    ## Dockerize Dropwizard Application
    
@@ -163,3 +176,5 @@ You will see that, you will get a docker container id.
 10. You can stop the docker container by running:
 
 ```docker container stop <id>```
+
+
