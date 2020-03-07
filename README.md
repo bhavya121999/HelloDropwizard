@@ -48,12 +48,12 @@ To test the API , use any rest client like postman etc.
             }
         }
 	```
-  
+```  
  
   After hitting this API new index **users** must be created.      
   The settings and mappings definition can be taken directly from the project through ```users.mapping``` which is present 
   under the ```resources``` package. 
-```
+
 
 ### Index Document <br />
 
