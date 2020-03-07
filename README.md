@@ -32,10 +32,9 @@
 ## API Documentation
 To test the API , use any rest client like postman etc.
 
-#### Create a new index<br />
+### Create a new index<br />
 
-
-```curl -XPOST 'http://{{hostname}}:9090/users' -H 'Content-Type: application/json' -d '```
+`curl -XPOST 'http://{{hostname}}:9090/users' -H 'Content-Type: application/json' -d '`
 
 ```
         {
@@ -54,10 +53,13 @@ To test the API , use any rest client like postman etc.
   After hitting this API new index **users** must be created.      
   The settings and mappings definition can be taken directly from the project through ```users.mapping``` which is present 
   under the ```resources``` package. 
+```
 
-#### Index document<br /> 
+### Index Document <br />
 
-```curl -XPOST 'http://{{hostname}}:9090/users/{id}' -H 'Content-Type: application/json' -d '```
+
+
+`curl -XPOST 'http://{{hostname}}:9090/users/{id}' -H 'Content-Type: application/json' -d '`
 
 ```
             {
@@ -70,17 +72,17 @@ To test the API , use any rest client like postman etc.
 
    After hitting this API user document will be created.
 
-#### Get document by id<br />
+### Get document by id<br />
 
-```curl -XGET 'http://{{hostname}}:9200/users/_doc/{id}' -H 'Content-Type: application/json' -d '```
+`curl -XGET 'http://{{hostname}}:9200/users/_doc/{id}' -H 'Content-Type: application/json' -d '`
 
 
    After hitting this api the document corresponding to the id specified in the URL will be obtained.
 
-#### Search Request<br />
+### Search Request<br />
 
 
-```curl -XGET 'http://{{hostname}}:9200/users/_search' -H 'Content-Type: application/json' -d '```
+`curl -XGET 'http://{{hostname}}:9200/users/_search' -H 'Content-Type: application/json' -d '`
 
 
  ``` {
@@ -89,10 +91,13 @@ To test the API , use any rest client like postman etc.
         "status" : "true"
                 }
                }
-             }```
+             }
+	     
+	     ```
 
-
+```
    After hitting this API the document that matches the search parameter will be seen as a response.
+   
    
    ## Dockerize Dropwizard Application
    
