@@ -92,7 +92,6 @@ public class UserResource {
      * @param searchParam Parameters that can be included in the search term.
      * @return user document corresponding to search term.
      */
-
     @POST
     @Path("/search")
     @Timed
@@ -128,8 +127,6 @@ public class UserResource {
         }
     }
 
-
-
     /**
      * This API is used to list all the documents indexed in an index
      *
@@ -144,6 +141,25 @@ public class UserResource {
             return Response.ok(userRegisterationService.getAll()).build();
         } catch (IOException e) {
             log.error("Error getting user doc and error is {}", e);
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * This API allows to search user document based on search term.
+     *
+     * @param searchParam Parameters that can be included in the search term.
+     * @return user document corresponding to search term.
+     */
+    @POST
+    @Path("/query")
+    @Timed
+    public Response So60628247(SearchParam searchParam) {
+        log.debug("Search term {}", searchParam.getSearchTerm());
+        try {
+            return Response.ok(userRegisterationService.search(searchParam.getSearchTerm())).build();
+        } catch (IOException e) {
+            log.error("Error getting search results for search term {} ", searchParam.getSearchTerm(), e);
             return Response.serverError().build();
         }
     }

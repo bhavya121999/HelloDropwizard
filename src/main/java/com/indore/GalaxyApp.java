@@ -1,13 +1,17 @@
 package com.indore;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.EnumSet;
-import java.util.Set;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-
+import com.google.common.collect.Sets;
+import com.indore.client.ElasticsearchClient;
+import com.indore.client.S3Client;
+import com.indore.config.GalaxyConfiguration;
+import com.indore.resources.*;
+import com.indore.services.ImageService;
+import com.indore.services.UserRegisterationService;
+import com.indore.services.UsersProfileService;
+import com.indore.utils.JsonUtil;
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import org.apache.http.HttpHost;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.elasticsearch.client.RequestOptions;
@@ -20,22 +24,12 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Sets;
-import com.indore.client.ElasticsearchClient;
-import com.indore.client.S3Client;
-import com.indore.config.GalaxyConfiguration;
-import com.indore.resources.AuthenticationResource;
-import com.indore.resources.ImageResource;
-import com.indore.resources.UserResource;
-import com.indore.resources.UsersProfileResource;
-import com.indore.services.ImageService;
-import com.indore.services.UserRegisterationService;
-import com.indore.services.UsersProfileService;
-import com.indore.utils.JsonUtil;
-
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.EnumSet;
+import java.util.Set;
 
 public class GalaxyApp extends Application<GalaxyConfiguration> {
     private static final Logger log = LoggerFactory.getLogger(GalaxyApp.class);
@@ -43,7 +37,7 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     public static final String USERS_INDEX_NAME = "users";
     public static final String USERS_PROFILE_INDEX_NAME = "usersprofile";
 
-    public static final Set<String> INDICES = Sets.newHashSet(USERS_INDEX_NAME, USERS_PROFILE_INDEX_NAME);
+    public static final Set<String> INDICES = Sets.newHashSet("so_60628247");
 
     public static void main(final String[] args) throws Exception {
         new GalaxyApp().run(args);
@@ -90,6 +84,9 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         environment.jersey().register(new ImageResource(imageService));
         environment.jersey().register(new AuthenticationResource(userRegisterationService));
         environment.jersey().register(MultiPartFeature.class);
+
+        // SO mapping
+        environment.jersey().register(new EmployeeResource(restHighLevelClient));
 
         log.info("Galaxy app started successfully.....");
     }
