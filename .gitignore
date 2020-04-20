@@ -1,0 +1,12 @@
+# Mac
+.DS_Store
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+logs/
+target/
+dependency-reduced-pom.xml
+
