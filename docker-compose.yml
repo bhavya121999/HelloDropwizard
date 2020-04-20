@@ -1,0 +1,15 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "9098:9098"
+      - "9099:9099"
+    volumes:
+      - .:/code
+    networks:
+      - docker-files_default
+
+networks:
+  docker-files_default:
+    external: true

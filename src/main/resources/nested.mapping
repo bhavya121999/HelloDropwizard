@@ -1,0 +1,24 @@
+{
+  "mappings": {
+    "properties": {
+      "events": {
+        "type": "nested",
+        "properties": {
+          "ecommerceData": {
+            "type": "nested",
+            "properties": {
+              "comments": {
+                "type": "nested",
+                "properties": {
+                  "recommendationType": {
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

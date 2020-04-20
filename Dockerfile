@@ -1,5 +1,6 @@
 FROM openjdk:12-alpine
-EXPOSE 9098
-EXPOSE 9099
-COPY target/galaxy-*.jar galaxy.jar
-ENTRYPOINT ["java" , "-jar" , "galaxy.jar"]
+WORKDIR /galaxy
+EXPOSE 9098 9099
+COPY target/galaxy-1.0-SNAPSHOT.jar galaxy.jar
+COPY config.yml config.yml
+ENTRYPOINT ["java" , "-jar" , "galaxy.jar", "server", "config.yml"]

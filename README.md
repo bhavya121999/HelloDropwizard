@@ -1,15 +1,14 @@
-# ServerCode
-## Prerequisities
+### Prerequisities
 
-1. JDK : 11 or later
+1. JDK : 8 or later
 2. Maven: 3.6.0
 3. Dropwizard: 1.3
-4. Elasticsearch: 7.3
+4. Elasticsearch: 7.6
 5. Docker : 19.03.5
 
 
 
-## Running the Application
+### Running the Application
 
 1. Clone the project.
 
@@ -29,64 +28,11 @@
 
 4. Run the application.
 
-## API Documentation
+### API Documentation
 To test the API , use any rest client like postman etc.
 
-#### Create a new index<br />
-For eg. users <br />
-This can be done as:<br />
-URL :-```http://{{hostname}}:9090/users```<br />
-header :- content-type :- application/json<br />
-method :- post<br />
-body :- {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "settings" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;     "number_of_shards" : 1<br />
-   &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;    },<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "mappings" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        "properties" : {<br />
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           "field1" : { "type" : "text" }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;        }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;     }<br />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   }<br />  
-  
-  After hitting this API new index **users** must be created.      
-  The settings and mappings definition can be taken directly from the project through ```users.mapping``` which is present 
-  under the ```resources``` package. 
-
-#### Index document<br /> 
-URL :- ```http://{{hostname}}:9090/users/{id}```<br />
-header :- content-type :- application/json<br />
-method :- post<br />
-body :- {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    "user_id": "gupta121",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "firstName": "Bhavya",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "lastName": "Gupta",<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "status": "true"<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    }<br />
-
-   After hitting this API user document will be created.
-
-#### Get document by id<br />
-URL :-```http://{{hostname}}:9200/users/_doc/{id}```<br />
-header :- content-type :- application/json<br />
-method :- get<br />
-   After hitting this api the document corresponding to the id specified in the URL will be obtained.
-
-#### Search Request<br />
-URL :-```http://{{hostname}}:9200/users/_search```<br />
-header :- content-type :- application/json<br />
-method :- get<br />
-body :-{<br />
-&nbsp;&nbsp;&nbsp;    "query": {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        "match" : {<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           "status" : "true"<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        }<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   }<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
-
-   After hitting this API the document that matches the search parameter will be seen as a response.
    
-   ## Dockerize Dropwizard Application
+### Dockerize Dropwizard Application
    
    1. Add the following **maven shade plugin** configuration.
    
