@@ -37,7 +37,7 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     public static final String USERS_INDEX_NAME = "users";
     public static final String USERS_PROFILE_INDEX_NAME = "usersprofile";
 
-    public static final Set<String> INDICES = Sets.newHashSet("nested");
+    public static final Set<String> INDICES = Sets.newHashSet("nestedimage");
 
     public static void main(final String[] args) throws Exception {
         new GalaxyApp().run(args);
@@ -83,10 +83,12 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         environment.jersey().register(new UsersProfileResource(userProfileService));
         environment.jersey().register(new ImageResource(imageService));
         environment.jersey().register(new AuthenticationResource(userRegisterationService));
+
         environment.jersey().register(MultiPartFeature.class);
 
         // SO mapping
         environment.jersey().register(new EmployeeResource(restHighLevelClient));
+        environment.jersey().register(new NestedResource(restHighLevelClient));
 
         log.info("Galaxy app started successfully.....");
     }

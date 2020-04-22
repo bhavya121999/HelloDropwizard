@@ -71,6 +71,16 @@ public class EmployeeResource {
         System.out.println("Search JSON query \n" + searchRequest.source().toString());
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         System.out.println("Search JSON query \n" + searchRequest.source().toString());
+
+        // TODO https://stackoverflow.com/questions/61323103/how-to-exclude-source-fields-in-search-apis/61323211#61323211
+        /*String[] includeFields = new String[] {"title", "innerObject.*"};
+        String[] excludeFields = new String[] {"user"};
+        SearchSourceBuilder source = new SearchSourceBuilder();
+        source.query(QueryBuilders.matchAllQuery())
+        SearchRequest request = new SearchRequest("index")
+                .source(source)
+
+        elasticClient.search(request, RequestOptions.DEFAULT)*/
         return searchResponse;
     }
 }

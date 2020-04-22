@@ -14,7 +14,6 @@ jobs:
     name: Building and pushing image to AWS ECR
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout
       uses: actions/checkout@master
 
@@ -23,7 +22,7 @@ jobs:
         $( aws ecr get-login --no-include-email )
     - name: Build and tag the image
       run: |
-        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE ./app
+        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
     - name: Push
       if: github.ref == 'refs/heads/master'
       run: |
