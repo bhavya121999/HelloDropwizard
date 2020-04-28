@@ -5,8 +5,8 @@ env:
   AWS_DEFAULT_REGION: ap-south-1
   AWS_DEFAULT_OUTPUT: json
   AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID }}
-  ACCESS_KEY: ${{secrets.ACCESS_KEY }}
-  SECRET_KEY: ${{secrets.SECRET_KEY }}
+  ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_ID }}
+  SECRET_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY }}
   CONTAINER_IMAGE: galaxy:${{ github.sha }}
 
 jobs:
