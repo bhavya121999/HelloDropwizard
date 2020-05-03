@@ -27,8 +27,8 @@ server:
       port: 9099
 
 elasticsearchConfiguration:
-  host: elasticsearch
-  port: 9500
+  host: search-my-domain-wqe5n4e4iipkps2yjae4sc5twq.ap-south-1.es.amazonaws.com
+  port:
 
 awsConfig:
   accesskey: "aa"
