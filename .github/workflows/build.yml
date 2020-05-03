@@ -30,9 +30,12 @@ jobs:
     - name: Setup ECR
       run: |
         $( aws ecr get-login --no-include-email )
+    - name: remove existing images
+      run: |
+        docker rmi galaxy:latest
     - name: Build and tag the image
       run: |
-        docker build -t latest .
+        docker build -t galaxy:latest .
     - name: Push
       if: github.ref == 'refs/heads/master'
       run: |
