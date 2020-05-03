@@ -36,4 +36,4 @@ jobs:
     - name: Push
       if: github.ref == 'refs/heads/master'
       run: |
-        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/latest
+        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/galaxy:latest
