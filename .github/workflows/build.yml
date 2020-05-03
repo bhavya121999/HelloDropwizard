@@ -32,7 +32,7 @@ jobs:
         $( aws ecr get-login --no-include-email )
     - name: Build and tag the image
       run: |
-        docker build -t galaxy:latest .
+        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/galaxy:latest .
     - name: Push
       if: github.ref == 'refs/heads/master'
       run: |
