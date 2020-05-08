@@ -24,9 +24,10 @@ public class NestedService {
     }
 
     /**
-     * Add userProfile document to its index.
-     *
-     * @param userProfile userProfile document is JSON format. Cannot be {@code null}.
+     * Add user profile
+     * @param userProfile
+     * @return
+     * @throws IOException
      */
     public boolean add(UserProfile userProfile) throws IOException {
         /*if (!isUserIdExist(userProfile.getUserId())) {

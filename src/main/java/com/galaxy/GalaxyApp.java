@@ -17,6 +17,8 @@ import com.google.common.collect.Sets;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import org.apache.http.HttpHost;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.elasticsearch.client.RequestOptions;
@@ -42,7 +44,7 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     public static final String USERS_INDEX_NAME = "users";
     public static final String USERS_PROFILE_INDEX_NAME = "usersprofile";
 
-    public static final Set<String> INDICES = Sets.newHashSet("nestedimage");
+    public static final Set<String> INDICES = Sets.newHashSet("users", "usersprofile");
 
     public static void main(final String[] args) throws Exception {
         new GalaxyApp().run(args);
@@ -56,7 +58,12 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
     @Override
     public void initialize(final Bootstrap<GalaxyConfiguration> bootstrap) {
         log.info("Galaxy app initializing...........");
-
+        bootstrap.addBundle(new SwaggerBundle<GalaxyConfiguration>() {
+            @Override
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(GalaxyConfiguration configuration) {
+                return configuration.swaggerBundleConfiguration;
+            }
+        });
     }
 
     @Override
@@ -141,5 +148,4 @@ public class GalaxyApp extends Application<GalaxyConfiguration> {
         }
         return false;
     }
-
 }

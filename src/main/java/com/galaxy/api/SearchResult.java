@@ -3,11 +3,7 @@ package com.galaxy.api;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.rest.RestStatus;
 
-/**
- * Base search results builder class.
- *
- * @author Amit Khandelwal
- */
+
 public abstract class SearchResult {
 	protected final float score;
 

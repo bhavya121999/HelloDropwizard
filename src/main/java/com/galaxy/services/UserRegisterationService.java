@@ -173,7 +173,7 @@ public class UserRegisterationService {
 	}
 
 	private List<UserSearchResult> getUserSearchResults(SearchResponse searchResponse) {
-		// TODO create a meaningful response object, in which below elasticsearch attributes can be embedded.
+		// TODO create a meaningful response object, in which below Elasticsearch attributes can be embedded.
 		RestStatus status = searchResponse.status();
 		TimeValue took = searchResponse.getTook();
 		Boolean terminatedEarly = searchResponse.isTerminatedEarly();

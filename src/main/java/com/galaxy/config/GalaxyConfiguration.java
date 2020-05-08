@@ -3,10 +3,14 @@ package com.galaxy.config;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 public class GalaxyConfiguration extends Configuration {
     private ElasticsearchConfig elasticsearchConfig;
     private AwsConfig awsConfig;
+
+    @JsonProperty("swagger")
+    public SwaggerBundleConfiguration swaggerBundleConfiguration;
 
     @JsonProperty("elasticsearchConfiguration")
     public ElasticsearchConfig getElasticsearchConfig() {

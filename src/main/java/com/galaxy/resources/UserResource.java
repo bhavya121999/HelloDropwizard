@@ -5,6 +5,10 @@ import com.galaxy.api.SearchParam;
 import com.galaxy.api.UserRegistration;
 import com.galaxy.services.UserRegisterationService;
 import com.galaxy.utils.JSONResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,7 @@ import java.io.IOException;
  */
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
+@Api(value = "/users")
 public class UserResource {
     private static final Logger log = LoggerFactory.getLogger(UserResource.class);
 
@@ -34,19 +39,19 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed
+    @ApiOperation(value = "User registeration API")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid input")})
     public Response createUser(@Valid UserRegistration userRegistration) {
         try {
             log.debug("User registration doc is {}", userRegistration.toString());
             boolean userCreated = userRegisterationService.register(userRegistration);
             JSONResponse response = new JSONResponse();
             if (userCreated) {
-                //return javax.ws.rs.core.Response.ok("user with id: " + userRegistration.getUserId() + "created successfully").build();
                 response.setStatusCode(Response.Status.OK.getStatusCode());
                 response.setMsg("user with id: " + userRegistration.getUserId() + "created successfully");
                 return Response.ok(response).build();
 
             } else {
-                //return javax.ws.rs.core.Response.ok("User already exist").build();
                 response.setStatusCode(Response.Status.OK.getStatusCode());
                 response.setMsg("User already exist");
                 return Response.ok(response).build();
@@ -67,10 +72,11 @@ public class UserResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
+    @ApiOperation(value = "Get user details by user-id")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid input")})
     public Response getUser(@PathParam("id") @NotEmpty String id) {
         log.debug("Get request for user id {}", id);
         try {
-
             return Response.ok(userRegisterationService.get(id)).build();
         } catch (IOException e) {
             log.error("Error getting user doc {} and error is {}", id, e);
@@ -87,6 +93,8 @@ public class UserResource {
     @POST
     @Path("/search")
     @Timed
+    @ApiOperation(value = "search users")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid input")})
     public Response searchUsers(SearchParam searchParam) {
         log.debug("Search term {}", searchParam.getSearchTerm());
         try {
@@ -102,14 +110,15 @@ public class UserResource {
      *
      * @param userId unique id of user document. Cannot be {@code null}.
      * @return user document is deleted.
-     */
-
+     * */
     @DELETE
     @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
+    @ApiOperation(value = "delete user")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid input")})
     public Response deleteUser(@PathParam("userId") String userId) {
-        log.debug("Delete request for message id {}", userId);
+        log.debug("Delete request for user id {}", userId);
         try {
             userRegisterationService.delete(userId);
             return Response.ok().build();
@@ -127,35 +136,17 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
+    @ApiOperation(value = "Get all users")
+    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid input")})
     public Response getAllUser() {
         log.debug("Get record of all users");
         try {
             return Response.ok(userRegisterationService.getAll()).build();
         } catch (IOException e) {
-            log.error("Error getting user doc and error is {}", e);
+            log.error("Error getting user docs and error is {}", e);
             return Response.serverError().build();
         }
     }
-
-    /**
-     * This API allows to search user document based on search term.
-     *
-     * @param searchParam Parameters that can be included in the search term.
-     * @return user document corresponding to search term.
-     */
-    @POST
-    @Path("/query")
-    @Timed
-    public Response So60628247(SearchParam searchParam) {
-        log.debug("Search term {}", searchParam.getSearchTerm());
-        try {
-            return Response.ok(userRegisterationService.search(searchParam.getSearchTerm())).build();
-        } catch (IOException e) {
-            log.error("Error getting search results for search term {} ", searchParam.getSearchTerm(), e);
-            return Response.serverError().build();
-        }
-    }
-
 }
 
 
