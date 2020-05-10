@@ -47,9 +47,10 @@ public class UserRegisterationService {
 	}
 
 	/**
-	 * Add user document to its index.
 	 *
-	 * @param userRegistration user document is JSON format. Cannot be {@code null}.
+	 * @param userRegistration
+	 * @return
+	 * @throws IOException
 	 */
 	public boolean register(UserRegistration userRegistration) throws IOException {
 		if (isUserExist(userRegistration.getEmailId(), userRegistration.getUserId(),

@@ -1,6 +1,5 @@
 # Logging settings.
 logging:
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
   # Logger-specific levels.
   loggers:
@@ -14,8 +13,8 @@ logging:
     - type: file
       threshold: INFO
       logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
-      currentLogFilename: /tmp/galaxy.log
-      archivedLogFilenamePattern: /tmp/galaxy-%d{yyyy-MM-dd}.log.gz
+      currentLogFilename: /var/log/app/galaxy/galaxy.log
+      archivedLogFilenamePattern: /var/log/app/galaxy/galaxy-%d{yyyy-MM-dd}.log.gz
       archivedFileCount: 7
       timeZone: UTC+5:30
 
