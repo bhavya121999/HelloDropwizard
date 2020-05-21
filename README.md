@@ -1,9 +1,9 @@
 ### Prerequisities
 
-1. JDK : 8 or later
+1. JDK : 11 or later
 2. Maven: 3.6.0
 3. Dropwizard: 1.3
-4. Elasticsearch: 7.6
+4. Elasticsearch: 7.7
 5. Docker : 19.03.5
 
 
