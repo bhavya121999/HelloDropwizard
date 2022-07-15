@@ -24,7 +24,7 @@
         <!--Jars version-->
         <dropwizard.version>2.0.8</dropwizard.version>
         <es.client.version>7.7.0</es.client.version>
-        <s3.version>1.11.611</s3.version>
+        <s3.version>1.12.261</s3.version>
         <jersey.multipart.version>2.15</jersey.multipart.version>
         <jersey.servlet.version>2.10</jersey.servlet.version>
         <maven.compiler.source>11</maven.compiler.source>
